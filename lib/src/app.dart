@@ -7,11 +7,11 @@ class TabManager extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'TabManager',
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(title: 'TabManager'),
     );
   }
 }
