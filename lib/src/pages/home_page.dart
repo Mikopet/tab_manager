@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'events_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
 
@@ -10,6 +12,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  void _gotoEventsPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+            builder: (context) => const EventsPage()))
+        .then((_) {
+      setState(() {});
     });
   }
 
@@ -23,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             const Text('You have no ongoing events'),
             TextButton(
-              onPressed: null,
+              onPressed: _gotoEventsPage,
               child: const Text('See all Events'),
             ),
           ],
