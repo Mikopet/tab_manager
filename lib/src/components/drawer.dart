@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/pages/events_page.dart';
+import 'package:tab_manager/src/components/connection_indicator.dart';
 
 class NavDrawer extends StatelessWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -18,19 +19,10 @@ class NavDrawer extends StatelessWidget {
           DrawerHeader(
             // TODO: write connection test logic
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  Text(
-                    'Offline',
-                    style: TextStyle(color: Colors.red, fontSize: 16),
-                    textAlign: TextAlign.left,
-                  ),
-                  Text(
-                    'Synced',
-                    style: TextStyle(color: Colors.green, fontSize: 16),
-                  ),
-                ]),
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [ConnectionIndicator()],
+            ),
             decoration: const BoxDecoration(
                 color: Colors.green,
                 image: DecorationImage(

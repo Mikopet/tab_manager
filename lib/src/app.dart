@@ -22,7 +22,23 @@ class AppState extends State<TabManager> {
     _configureAmplify();
   }
 
+  static bool networkStatus = false;
+  static bool outboxStatus = false;
+
   void _configureAmplify() async {
+    Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
+      if (hubEvent.eventName == 'networkStatus') {
+        setState(() {
+          networkStatus = hubEvent.payload as bool; // TODO: .active
+        });
+      }
+      if (hubEvent.eventName == 'outboxStatus') {
+        setState(() {
+          outboxStatus = hubEvent.payload as bool; // TODO: .isEmpty
+        });
+      }
+    });
+
     Amplify.addPlugins([
       AmplifyDataStore(modelProvider: ModelProvider.instance),
       // AmplifyAPI(),
