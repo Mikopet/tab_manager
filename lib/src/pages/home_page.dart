@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tab_manager/repositories/event_repository.dart';
 
 import '../drawer.dart';
-import 'events_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -14,14 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  void _gotoEventsPage() {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const EventsPage()))
-        .then((_) {
-      setState(() {});
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,10 +22,19 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have X opened tabs in Y value spent'),
-            TextButton(
-              onPressed: _gotoEventsPage,
-              child: const Text('See all Events'),
+            Text(
+              'You have open tabs of',
+              style: Theme.of(context).textTheme.headline2,
+            ),
+            Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  'X',
+                  style: Theme.of(context).textTheme.headline1,
+                )),
+            Text(
+              'value spent',
+              style: Theme.of(context).textTheme.headline2,
             ),
           ],
         ),
@@ -56,8 +56,7 @@ class _HomePageState extends State<HomePage> {
                 child: Icon(Icons.add),
               );
             }
-          }
-      ),
+          }),
     );
   }
 }
