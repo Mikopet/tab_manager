@@ -14,13 +14,23 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          const DrawerHeader(
+          DrawerHeader(
             // TODO: write connection test logic
-            child: Text(
-              'Offline',
-              style: TextStyle(color: Colors.red, fontSize: 16),
-            ),
-            decoration: BoxDecoration(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  Text(
+                    'Offline',
+                    style: TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.left,
+                  ),
+                  Text(
+                    'Synced',
+                    style: TextStyle(color: Colors.green, fontSize: 16),
+                  ),
+                ]),
+            decoration: const BoxDecoration(
                 color: Colors.green,
                 image: DecorationImage(
                     fit: BoxFit.fill,
