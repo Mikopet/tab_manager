@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tab_manager/repositories/event_repository.dart';
 
+import '../drawer.dart';
 import 'events_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
+      endDrawer: const NavDrawer(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

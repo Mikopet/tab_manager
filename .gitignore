@@ -68,3 +68,5 @@ amplifytools.xcconfig
 
 # This will be a public repository, so there is no point to share this data at all
 amplify/team-provider-info.json
+
+assets/images/cover.webp
