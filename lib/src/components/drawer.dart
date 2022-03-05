@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:tab_manager/src/pages/events_page.dart';
 import 'package:tab_manager/src/components/connection_indicator.dart';
+import 'package:tab_manager/src/pages/events_page.dart';
+import 'package:tab_manager/src/pages/settings_page.dart';
 
 class NavDrawer extends StatelessWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -47,7 +48,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings_rounded),
             title: const Text('Settings'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => _navigateTo(context, const SettingsPage()),
           ),
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),

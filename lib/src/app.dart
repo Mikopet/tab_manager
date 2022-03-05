@@ -48,8 +48,6 @@ class AppState extends State<TabManager> {
     } on AmplifyAlreadyConfiguredException {
       print("Tried to reconfigure Amplify...");
     }
-    // TODO: put this under a button inside a settings menu
-    Amplify.DataStore.clear();
   }
 
   @override
