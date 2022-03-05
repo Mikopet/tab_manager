@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../models/ModelProvider.dart';
-import '../../repositories/event_repository.dart';
+import 'package:tab_manager/models/ModelProvider.dart';
+import 'package:tab_manager/repositories/event_repository.dart';
 
 class EventsPage extends StatefulWidget {
   const EventsPage({Key? key}) : super(key: key);

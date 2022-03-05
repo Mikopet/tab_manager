@@ -1,11 +1,12 @@
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+
 import 'package:tab_manager/src/pages/home_page.dart';
-import 'package:tab_manager/src/theme.dart';
+import 'package:tab_manager/src/components/theme.dart';
+import 'package:tab_manager/models/ModelProvider.dart';
 
 import '../amplifyconfiguration.dart';
-import '../models/ModelProvider.dart';
 
 class TabManager extends StatefulWidget {
   const TabManager({Key? key}) : super(key: key);

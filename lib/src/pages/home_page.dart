@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tab_manager/repositories/event_repository.dart';
 
-import '../drawer.dart';
+import 'package:tab_manager/repositories/event_repository.dart';
+import 'package:tab_manager/src/components/drawer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);

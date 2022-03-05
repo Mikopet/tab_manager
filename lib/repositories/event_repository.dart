@@ -1,6 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 
-import '../models/Event.dart';
+import 'package:tab_manager/models/Event.dart';
 
 class EventRepository {
   // TODO: create valid logic
