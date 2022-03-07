@@ -14,12 +14,13 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: Center(
-          child: TextButton(
-        onPressed: () {
-          Amplify.DataStore.clear();
-        },
-        child: const Text('Delete local data'),
-      )),
+        child: TextButton(
+          onPressed: () {
+            Amplify.DataStore.clear();
+          },
+          child: const Text('Delete local data'),
+        ),
+      ),
     );
   }
 }

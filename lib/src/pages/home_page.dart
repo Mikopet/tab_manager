@@ -22,16 +22,18 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // TODO: if there is no backend at all, there should be a button to navigate to manual page
             Text(
               'You have open tabs of',
               style: Theme.of(context).textTheme.headline2,
             ),
             Padding(
-                padding: const EdgeInsets.all(20),
-                child: Text(
-                  'X',
-                  style: Theme.of(context).textTheme.headline1,
-                )),
+              padding: const EdgeInsets.all(20),
+              child: Text(
+                'X',
+                style: Theme.of(context).textTheme.headline1,
+              ),
+            ),
             Text(
               'value spent',
               style: Theme.of(context).textTheme.headline2,

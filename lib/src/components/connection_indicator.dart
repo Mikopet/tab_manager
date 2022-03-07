@@ -16,7 +16,10 @@ class _ConnectionIndicatorState extends State<ConnectionIndicator> {
     const onStyle = TextStyle(color: Colors.green);
 
     return Column(
-      children: [
+      children: const [
+        // TODO: make it work
+        Text('ALPHA', style: TextStyle(color: Colors.red)),
+        /*
         Text(
           AppState.networkStatus ? 'Online' : 'Offline',
           style: AppState.networkStatus ? onStyle : offStyle,
@@ -25,6 +28,7 @@ class _ConnectionIndicatorState extends State<ConnectionIndicator> {
           AppState.outboxStatus ? 'Synced' : 'Unynced',
           style: AppState.outboxStatus ? onStyle : offStyle,
         ),
+         */
       ],
     );
   }
