@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:tab_manager/amplifyconfiguration.dart';
 
 class AmplifyConfigurationStorage {
   Future<String> get _localPath async {
@@ -23,7 +24,7 @@ class AmplifyConfigurationStorage {
 
       return contents;
     } catch (e) {
-      return '';
+      return amplifyconfig;
     }
   }
 

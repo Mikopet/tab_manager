@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 import 'package:tab_manager/src/pages/qr_scan_page.dart';
 
@@ -45,6 +46,8 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context) => const QRScanPage(),
     ));
 
+    // TODO: validation
     AmplifyConfigurationStorage().writeConfig(qrData);
+    Phoenix.rebirth(context);
   }
 }
