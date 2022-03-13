@@ -26,6 +26,12 @@ final appTheme = ThemeData(
       backgroundColor: Colors.amber,
     ),
   ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      primary: Colors.amber,
+      onPrimary: Colors.white,
+    ),
+  ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
     foregroundColor: Colors.white,
   ),

@@ -94,8 +94,12 @@ class _QRScanPageState extends State<QRScanPage> {
   void _onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
 
-    controller.scannedDataStream
-        .listen((scanData) => setState(() => result = scanData));
+    controller.scannedDataStream.listen((scanData) {
+      setState(() => result = scanData);
+      if (result != null) {
+        Navigator.pop(context, result!.code);
+      }
+    });
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {

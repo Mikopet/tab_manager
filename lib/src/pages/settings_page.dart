@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 import 'package:tab_manager/src/pages/qr_scan_page.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -19,24 +20,31 @@ class _SettingsPageState extends State<SettingsPage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const QRScanPage(),
-                ));
+                _storeConfiguration(context);
               },
               child: const Text('Add server'),
             ),
           ),
           Center(
-            child: TextButton(
+            child: ElevatedButton(
               onPressed: () {
                 Amplify.DataStore.clear();
               },
               child: const Text('Delete local data'),
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              style: ElevatedButton.styleFrom(primary: Colors.red),
             ),
           ),
+
         ],
       ),
     );
+  }
+
+  void _storeConfiguration(BuildContext context) async {
+    final String qrData = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const QRScanPage(),
+    ));
+
+    AmplifyConfigurationStorage().writeConfig(qrData);
   }
 }
