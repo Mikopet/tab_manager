@@ -35,7 +35,6 @@ class _SettingsPageState extends State<SettingsPage> {
               style: ElevatedButton.styleFrom(primary: Colors.red),
             ),
           ),
-
         ],
       ),
     );
