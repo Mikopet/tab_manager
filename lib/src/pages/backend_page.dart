@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BackendPage extends StatefulWidget {
-  const BackendPage({Key? key, required this.title}) : super(key: key);
+  const BackendPage({
+    Key? key,
+    required this.refreshWith,
+  }) : super(key: key);
 
-  final String title;
+  final ValueChanged<bool> refreshWith;
 
   @override
   State<BackendPage> createState() => _BackendPageState();
@@ -41,7 +44,9 @@ class _BackendPageState extends State<BackendPage> {
               style: TextStyle(color: Colors.white),
             ),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                widget.refreshWith(true);
+              },
               icon: const Icon(
                 Icons.fast_forward_rounded,
                 size: 24.0,
