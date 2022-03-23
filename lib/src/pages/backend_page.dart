@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+
+import 'package:tab_manager/src/pages/qr_scan_page.dart';
+import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 
 class BackendPage extends StatefulWidget {
   const BackendPage({
@@ -25,7 +29,9 @@ class _BackendPageState extends State<BackendPage> {
               style: TextStyle(color: Colors.white),
             ),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                _storeConfiguration(context);
+              },
               icon: const Icon(
                 Icons.qr_code_rounded,
                 size: 24.0,
@@ -57,5 +63,15 @@ class _BackendPageState extends State<BackendPage> {
         ),
       ),
     );
+  }
+
+  void _storeConfiguration(BuildContext context) async {
+    final String qrData = await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const QRScanPage(),
+    ));
+
+    // TODO: validation
+    AmplifyConfigurationStorage().writeConfig(qrData);
+    Phoenix.rebirth(context);
   }
 }

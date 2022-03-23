@@ -21,14 +21,6 @@ class _SettingsPageState extends State<SettingsPage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                _storeConfiguration(context);
-              },
-              child: const Text('Add server'),
-            ),
-          ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
                 Amplify.DataStore.clear();
               },
               child: const Text('Delete local data'),
@@ -38,15 +30,5 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     );
-  }
-
-  void _storeConfiguration(BuildContext context) async {
-    final String qrData = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const QRScanPage(),
-    ));
-
-    // TODO: validation
-    AmplifyConfigurationStorage().writeConfig(qrData);
-    Phoenix.rebirth(context);
   }
 }

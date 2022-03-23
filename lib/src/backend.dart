@@ -24,45 +24,53 @@ class BackendState extends State<BackendProvider> {
   @override
   void initState() {
     super.initState();
-    _configureAmplify();
+
+    if (!Amplify.isConfigured) {
+      AmplifyConfigurationStorage().readConfig().then((String value) {
+        _setupAmplify(value);
+      });
+    }
   }
 
-  void _configureAmplify() async {
-    late final String amplifyConfig;
+  void _setupAmplify(amplifyConfig) {
+    if (amplifyConfig != '{}') {
+      Amplify.addPlugins([
+        // AmplifyAuthCognito(),
+        // AmplifyAPI(),
+      ]);
+      configStatus = true;
+    }
 
+    if (configStatus) {
+      Amplify.addPlugin(
+          AmplifyDataStore(modelProvider: ModelProvider.instance));
+
+      _configureAmplify(amplifyConfig);
+      _subscribeAmplify();
+    }
+  }
+
+  void _configureAmplify(amplifyConfig) async {
     try {
-      AmplifyConfigurationStorage().readConfig().then((String value) {
-        amplifyConfig = value;
-
-        Amplify.addPlugin(
-            AmplifyDataStore(modelProvider: ModelProvider.instance));
-
-        if (amplifyConfig != '{}') {
-          Amplify.addPlugins([
-            // AmplifyAuthCognito(),
-            // AmplifyAPI(),
-          ]);
-          configStatus = true;
-        }
-
-        Amplify.configure(amplifyConfig);
-
-        Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
-          if (hubEvent.eventName == 'networkStatus') {
-            setState(() {
-              // networkStatus = hubEvent.payload.active
-            });
-          }
-          if (hubEvent.eventName == 'outboxStatus') {
-            setState(() {
-              // outboxStatus = hubEvent.payload.isEmpty
-            });
-          }
-        });
-      });
+      await Amplify.configure(amplifyConfig);
     } on AmplifyAlreadyConfiguredException {
       print("Tried to reconfigure Amplify...");
     }
+  }
+
+  void _subscribeAmplify() {
+    Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
+      if (hubEvent.eventName == 'networkStatus') {
+        setState(() {
+          // networkStatus = hubEvent.payload.active
+        });
+      }
+      if (hubEvent.eventName == 'outboxStatus') {
+        setState(() {
+          // outboxStatus = hubEvent.payload.isEmpty
+        });
+      }
+    });
   }
 
   void stateRebuild(bool value) {
