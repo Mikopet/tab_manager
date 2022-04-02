@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:tab_manager/src/pages/qr_scan_page.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
@@ -7,10 +6,10 @@ import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 class BackendPage extends StatefulWidget {
   const BackendPage({
     Key? key,
-    required this.refreshWith,
+    required this.refresh,
   }) : super(key: key);
 
-  final ValueChanged<bool> refreshWith;
+  final ValueChanged<String> refresh;
 
   @override
   State<BackendPage> createState() => _BackendPageState();
@@ -51,7 +50,7 @@ class _BackendPageState extends State<BackendPage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                widget.refreshWith(true);
+                widget.refresh('{}');
               },
               icon: const Icon(
                 Icons.fast_forward_rounded,
@@ -71,7 +70,8 @@ class _BackendPageState extends State<BackendPage> {
     ));
 
     // TODO: validation
-    AmplifyConfigurationStorage().writeConfig(qrData);
-    Phoenix.rebirth(context);
+    AmplifyConfigurationStorage()
+        .writeConfig(qrData)
+        .whenComplete(() => widget.refresh(qrData));
   }
 }

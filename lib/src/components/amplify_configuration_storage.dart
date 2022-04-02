@@ -34,4 +34,15 @@ class AmplifyConfigurationStorage {
     // Write the file
     return file.writeAsString(config);
   }
+
+  Future<int> deleteConfig() async {
+    try {
+      final file = await _localFile;
+
+      await file.delete();
+      return 0;
+    } catch (e) {
+      return -1;
+    }
+  }
 }

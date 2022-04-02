@@ -16,45 +16,42 @@ class BackendProvider extends StatefulWidget {
 }
 
 class BackendState extends State<BackendProvider> {
-  bool configStatus = false;
-
   static bool networkStatus = false;
   static bool outboxStatus = false;
 
   @override
   void initState() {
     super.initState();
-
-    if (!Amplify.isConfigured) {
-      AmplifyConfigurationStorage().readConfig().then((String value) {
-        _setupAmplify(value);
-      });
-    }
+    AmplifyConfigurationStorage().readConfig().then((String amplifyConfig) {
+      if (amplifyConfig != '{}') {
+        _configureAmplify(amplifyConfig);
+      }
+    });
   }
 
-  void _setupAmplify(amplifyConfig) {
+  void _setupAmplify(String amplifyConfig) {
     if (amplifyConfig != '{}') {
       Amplify.addPlugins([
         // AmplifyAuthCognito(),
         // AmplifyAPI(),
       ]);
-      configStatus = true;
     }
 
-    if (configStatus) {
-      Amplify.addPlugin(
-          AmplifyDataStore(modelProvider: ModelProvider.instance));
-
-      _configureAmplify(amplifyConfig);
-      _subscribeAmplify();
-    }
+    Amplify.addPlugin(AmplifyDataStore(modelProvider: ModelProvider.instance));
   }
 
   void _configureAmplify(amplifyConfig) async {
     try {
-      await Amplify.configure(amplifyConfig);
-    } on AmplifyAlreadyConfiguredException {
-      print("Tried to reconfigure Amplify...");
+      if (!Amplify.isConfigured) {
+        _setupAmplify(amplifyConfig);
+        await Amplify.configure(amplifyConfig).whenComplete(() {
+          setState(() {
+            _subscribeAmplify();
+          });
+        });
+      }
+    } catch (e) {
+      print("Amplify config error: $e");
     }
   }
 
@@ -73,23 +70,20 @@ class BackendState extends State<BackendProvider> {
     });
   }
 
-  void stateRebuild(bool value) {
-    configStatus = value;
-    setState(() {});
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (configStatus) {
+    // TODO: perhaps a FutureBuilder with a CircularLoader is valid here
+    if (Amplify.isConfigured) {
       return widget.child;
     }
+
     return MaterialApp(
       title: 'TabManager',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: BackendPage(refreshWith: stateRebuild),
+      home: BackendPage(refresh: _configureAmplify),
     );
   }
 }
