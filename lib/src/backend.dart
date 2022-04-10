@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class BackendState extends State<BackendProvider> {
   void _setupAmplify(String amplifyConfig) {
     if (amplifyConfig != '{}') {
       Amplify.addPlugins([
-        // AmplifyAuthCognito(),
+        AmplifyAuthCognito(),
         // AmplifyAPI(),
       ]);
     }

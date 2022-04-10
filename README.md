@@ -30,3 +30,6 @@ Currently not so much, but do not forget to generate the icons :)
 ```bash
 $ flutter pub run flutter_launcher_icons:main
 ```
+
+If you overwrite the `lib/amplifyconfiguration.dart` with your own generated one,
+the backend QR screen will be skipped.

@@ -1,3 +1,4 @@
+import 'package:amplify_authenticator/amplify_authenticator.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/pages/home_page.dart';
@@ -13,10 +14,13 @@ class TabManager extends StatefulWidget {
 class AppState extends State<TabManager> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TabManager',
-      theme: appTheme,
-      home: const HomePage(title: 'TabManager'),
+    return Authenticator(
+      child: MaterialApp(
+        builder: Authenticator.builder(),
+        title: 'TabManager',
+        theme: appTheme,
+        home: const HomePage(title: 'TabManager'),
+      ),
     );
   }
 }
