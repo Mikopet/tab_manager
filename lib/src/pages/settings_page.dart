@@ -29,11 +29,22 @@ class _SettingsPageState extends State<SettingsPage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                AmplifyConfigurationStorage().deleteConfig();
-                Phoenix.rebirth(context);
+                AmplifyConfigurationStorage()
+                    .deleteConfig()
+                    .whenComplete(() => Phoenix.rebirth(context));
               },
               child: const Text('Delete backend config'),
               style: ElevatedButton.styleFrom(primary: Colors.red),
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Amplify.Auth.signOut();
+                Phoenix.rebirth(context);
+              },
+              child: const Text('Sign Out'),
+              style: ElevatedButton.styleFrom(primary: Colors.orange),
             ),
           ),
         ],

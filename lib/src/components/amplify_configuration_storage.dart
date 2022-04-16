@@ -24,7 +24,7 @@ class AmplifyConfigurationStorage {
 
       return contents;
     } catch (e) {
-      return amplifyconfig;
+      return amplifyconfig.trim();
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:tab_manager/src/app.dart';
 
 import 'package:tab_manager/src/pages/backend_page.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
@@ -19,11 +20,16 @@ class BackendProvider extends StatefulWidget {
 class BackendState extends State<BackendProvider> {
   static bool networkStatus = false;
   static bool outboxStatus = false;
+  String _amplifyConfig = '{}';
 
   @override
   void initState() {
     super.initState();
     AmplifyConfigurationStorage().readConfig().then((String amplifyConfig) {
+      setState(() {
+        _amplifyConfig = amplifyConfig;
+      });
+
       if (amplifyConfig != '{}') {
         _configureAmplify(amplifyConfig);
       }
@@ -47,6 +53,7 @@ class BackendState extends State<BackendProvider> {
         _setupAmplify(amplifyConfig);
         await Amplify.configure(amplifyConfig).whenComplete(() {
           setState(() {
+            // _amplifyConfig = amplifyConfig;
             _subscribeAmplify();
           });
         });
@@ -75,6 +82,11 @@ class BackendState extends State<BackendProvider> {
   Widget build(BuildContext context) {
     // TODO: perhaps a FutureBuilder with a CircularLoader is valid here
     if (Amplify.isConfigured) {
+      if (_amplifyConfig != '{}') {
+        // TODO: this is not dynamic, need some refactor
+        return const TabManager(auth: true);
+      }
+
       return widget.child;
     }
 

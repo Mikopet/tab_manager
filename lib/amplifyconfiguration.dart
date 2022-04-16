@@ -1,1 +1,1 @@
-const amplifyconfig = '{}';
+const amplifyconfig = ''' {}''';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'package:tab_manager/src/pages/qr_scan_page.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
@@ -72,6 +73,6 @@ class _BackendPageState extends State<BackendPage> {
     // TODO: validation
     AmplifyConfigurationStorage()
         .writeConfig(qrData)
-        .whenComplete(() => widget.refresh(qrData));
+        .whenComplete(() => Phoenix.rebirth(context));
   }
 }
