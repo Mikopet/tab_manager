@@ -14,6 +14,8 @@ class BackendPage extends StatefulWidget {
 
   @override
   State<BackendPage> createState() => _BackendPageState();
+  @override
+  final Key key = const Key('BackendPage');
 }
 
 class _BackendPageState extends State<BackendPage> {

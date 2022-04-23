@@ -25,6 +25,7 @@ class AppState extends State<TabManager> {
     }
 
     return Authenticator(
+      key: const Key('Authenticator'),
       child: MaterialApp(
         builder: Authenticator.builder(),
         title: 'TabManager',
