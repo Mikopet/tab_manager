@@ -1,37 +1,164 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Dart
+name: "Flutter Testing"
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+      - '**/*.md'
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+    paths-ignore:
+      - '*.md'
+      - '**/*.md'
 
 jobs:
-  build:
+  # Building flutter
+  assemble:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
 
-      - name: Check flutter version
-        run: flutter --version
-
-      - name: Get dependencies
+      - name: "Get dependencies"
         run: flutter pub get
 
 #      - name: Generate icons
 #        run: flutter pub run flutter_launcher_icons:main
 
-#       - name: Run unit tests
-#         run: flutter test
-        
-#       - name: Run integration tests
-#         run: flutter test integration_test
+#      - name: "Check for any formatting issues in the code."
+#        run: flutter format --set-exit-if-changed .
 
-# TODO: add package build
+#      - name: "Statically analyze the Dart code for any errors."
+#        run: flutter analyze .
+
+      - name: "Upload build artifacts"
+        uses: actions/upload-artifact@v3
+        with:
+          name: flutter-app
+          path: .
+
+  # Testing flutter
+  test_unit:
+    runs-on: ubuntu-latest
+    needs: assemble
+    steps:
+      - name: "Download build artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: flutter-app
+          path: .
+
+#      - name: "Run unit tests"
+#        run: flutter test
+
+  # Testing Android
+  test_android:
+    runs-on: macos-latest # because of native hardware acceleration support provided by HAXM
+    needs: assemble
+    strategy:
+      matrix:
+        api-level: [ 21, 23, 29 ]
+    steps:
+      - name: "Download build artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: flutter-app
+          path: .
+
+      - name: "Gradle cache"
+        uses: gradle/gradle-build-action@v2
+
+      - name: "AVD cache"
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
+
+      - name: "create AVD and generate snapshot for caching"
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - uses: subosito/flutter-action@v2
+
+      - name: "Run integration tests (android SDK #${{ matrix.api-level }})"
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          profile: Nexus 6
+          script: flutter test integration_test
+
+  # Testing iOS
+  test_ios:
+    runs-on: macos-latest
+    needs: assemble
+    strategy:
+      matrix:
+        device:
+          - "iPhone 8"
+          - "iPhone 11 Pro Max"
+    steps:
+      - name: "Download build artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: flutter-app
+          path: .
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: "List all simulators"
+        run: xcrun xctrace list devices
+
+      - name: "Start Simulator"
+        run: xcrun simctl boot "${{ matrix.device }}"
+
+      - uses: subosito/flutter-action@v2
+
+      - name: "Get dependencies"
+        run: flutter pub get
+
+      - name: "Run integration tests - (${{ matrix.device }})"
+        run: flutter test integration_test
+
+  # Build android package
+  build_android:
+    runs-on: ubuntu-latest
+    needs: [ test_unit, test_android, test_ios ]
+    steps:
+      - uses: subosito/flutter-action@v2
+
+  # Build ios package
+  build_ios:
+    runs-on: macos-latest
+    needs: [ test_unit, test_android, test_ios ]
+    steps:
+      - uses: subosito/flutter-action@v2
+
+  # Publish android package
+  deploy_android:
+    runs-on: ubuntu-latest
+    needs: build_android
+    steps:
+      - uses: subosito/flutter-action@v2
+
+  # Publish ios package
+  deploy_ios:
+    runs-on: macos-latest
+    needs: build_ios
+    steps:
+      - uses: subosito/flutter-action@v2
