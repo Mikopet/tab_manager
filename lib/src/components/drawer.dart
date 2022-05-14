@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/components/connection_indicator.dart';
-import 'package:tab_manager/src/pages/events_page.dart';
+import 'package:tab_manager/src/pages/admin_page.dart';
 import 'package:tab_manager/src/pages/settings_page.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -31,9 +31,9 @@ class NavDrawer extends StatelessWidget {
                     image: AssetImage('assets/images/cover.webp'))),
           ),
           ListTile(
-            leading: const Icon(Icons.event_rounded),
-            title: const Text('Events'),
-            onTap: () => _navigateTo(context, const EventsPage()),
+            leading: const Icon(Icons.edit_note_rounded),
+            title: const Text('Admin'),
+            onTap: () => _navigateTo(context, const AdminPage()),
           ),
           ListTile(
             leading: const Icon(Icons.input_rounded),
