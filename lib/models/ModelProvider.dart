@@ -21,14 +21,16 @@
 
 import 'package:amplify_core/amplify_core.dart';
 import 'Event.dart';
+import 'Product.dart';
 
 export 'Event.dart';
+export 'Product.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "f9c0f2d2b5a288ed5b3b9aeb1e6a3de5";
+  String version = "4a9a8692d2971f9b7003a9f96d1a83b1";
   @override
-  List<ModelSchema> modelSchemas = [Event.schema];
+  List<ModelSchema> modelSchemas = [Event.schema, Product.schema];
   static final ModelProvider _instance = ModelProvider();
   @override
   List<ModelSchema> customTypeSchemas = [];
@@ -39,6 +41,8 @@ class ModelProvider implements ModelProviderInterface {
     switch(modelName) {
       case "Event":
         return Event.classType;
+      case "Product":
+        return Product.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }
