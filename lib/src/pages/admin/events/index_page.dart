@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
 import 'package:tab_manager/repositories/event_repository.dart';
+import 'package:tab_manager/src/pages/admin/events/add_page.dart';
 
-class EventsPage extends StatefulWidget {
-  const EventsPage({Key? key}) : super(key: key);
+class EventIndexPage extends StatefulWidget {
+  const EventIndexPage({Key? key}) : super(key: key);
 
   @override
-  State<EventsPage> createState() => _EventsPageState();
+  State<EventIndexPage> createState() => _EventIndexPageState();
 }
 
-class _EventsPageState extends State<EventsPage> {
+class _EventIndexPageState extends State<EventIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Events')),
-      body: eventsWidget(),
+      body: indexWidget(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            EventRepository.addEvent();
-          });
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (c) => const EventAddPage()));
         },
         tooltip: 'add Event',
         child: const Icon(Icons.add),
@@ -28,7 +28,7 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  Widget eventsWidget() {
+  Widget indexWidget() {
     return FutureBuilder<List<Event>>(
       future: EventRepository.getEvents(),
       builder: (context, AsyncSnapshot<List<Event>> snapshot) {

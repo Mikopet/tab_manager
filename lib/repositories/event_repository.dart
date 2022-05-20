@@ -3,19 +3,8 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:tab_manager/models/Event.dart';
 
 class EventRepository {
-  // TODO: create valid logic
-  static addEvent() async {
-    final now = TemporalTime.now()
-        .format()
-        .replaceAll(RegExp(r'[^0-9]'), '')
-        .substring(0, 6);
-
+  static addEvent(Event event) async {
     try {
-      Event event = Event(
-        name: 'Event #$now',
-        start_date: TemporalDate.fromString("2022-02-22"),
-        end_date: TemporalDate.fromString("2022-03-22"),
-      );
       await Amplify.DataStore.save(event);
     } catch (e) {
       print(e);
