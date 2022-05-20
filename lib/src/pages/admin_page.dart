@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/pages/events_page.dart';
-import 'package:tab_manager/src/pages/products_page.dart';
+import 'package:tab_manager/src/pages/admin/products/index_page.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class _AdminPageState extends State<AdminPage> {
         children: [
           Center(
             child: ElevatedButton(
-              onPressed: () => _navigateTo(context, const ProductsPage()),
+              onPressed: () => _navigateTo(context, const ProductIndexPage()),
               child: const Text('Products'),
             ),
           ),

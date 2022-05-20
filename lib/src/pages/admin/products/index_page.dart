@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
 import 'package:tab_manager/repositories/product_repository.dart';
+import 'package:tab_manager/src/pages/admin/products/add_page.dart';
 
-class ProductsPage extends StatefulWidget {
-  const ProductsPage({Key? key}) : super(key: key);
+class ProductIndexPage extends StatefulWidget {
+  const ProductIndexPage({Key? key}) : super(key: key);
 
   @override
-  State<ProductsPage> createState() => _ProductsPageState();
+  State<ProductIndexPage> createState() => _ProductIndexPageState();
 }
 
-class _ProductsPageState extends State<ProductsPage> {
+class _ProductIndexPageState extends State<ProductIndexPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Products')),
-      body: productsWidget(),
+      body: indexWidget(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            ProductRepository.addProduct();
-          });
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (c) => const ProductAddPage()));
         },
         tooltip: 'add Product',
         child: const Icon(Icons.add),
@@ -28,7 +28,7 @@ class _ProductsPageState extends State<ProductsPage> {
     );
   }
 
-  Widget productsWidget() {
+  Widget indexWidget() {
     return FutureBuilder<List<Product>>(
       future: ProductRepository.getProducts(),
       builder: (context, AsyncSnapshot<List<Product>> snapshot) {
