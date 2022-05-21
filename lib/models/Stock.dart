@@ -19,21 +19,18 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
-import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Product type in your schema. */
+/** This is an auto generated class representing the Stock type in your schema. */
 @immutable
-class Product extends Model {
-  static const classType = const _ProductModelType();
+class Stock extends Model {
+  static const classType = const _StockModelType();
   final String id;
-  final String? _event_id;
-  final List<Stock>? _Stocks;
-  final String? _name;
-  final int? _unit_price;
+  final String? _product_id;
+  final int? _amount;
+  final int? _purchased_price;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -45,9 +42,9 @@ class Product extends Model {
     return id;
   }
   
-  String get event_id {
+  String get product_id {
     try {
-      return _event_id!;
+      return _product_id!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -58,13 +55,9 @@ class Product extends Model {
     }
   }
   
-  List<Stock>? get Stocks {
-    return _Stocks;
-  }
-  
-  String get name {
+  int get amount {
     try {
-      return _name!;
+      return _amount!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -75,17 +68,8 @@ class Product extends Model {
     }
   }
   
-  int get unit_price {
-    try {
-      return _unit_price!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  int? get purchased_price {
+    return _purchased_price;
   }
   
   TemporalDateTime? get createdAt {
@@ -96,15 +80,14 @@ class Product extends Model {
     return _updatedAt;
   }
   
-  const Product._internal({required this.id, required event_id, Stocks, required name, required unit_price, createdAt, updatedAt}): _event_id = event_id, _Stocks = Stocks, _name = name, _unit_price = unit_price, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Stock._internal({required this.id, required product_id, required amount, purchased_price, createdAt, updatedAt}): _product_id = product_id, _amount = amount, _purchased_price = purchased_price, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Product({String? id, required String event_id, List<Stock>? Stocks, required String name, required int unit_price}) {
-    return Product._internal(
+  factory Stock({String? id, required String product_id, required int amount, int? purchased_price}) {
+    return Stock._internal(
       id: id == null ? UUID.getUUID() : id,
-      event_id: event_id,
-      Stocks: Stocks != null ? List<Stock>.unmodifiable(Stocks) : Stocks,
-      name: name,
-      unit_price: unit_price);
+      product_id: product_id,
+      amount: amount,
+      purchased_price: purchased_price);
   }
   
   bool equals(Object other) {
@@ -114,12 +97,11 @@ class Product extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Product &&
+    return other is Stock &&
       id == other.id &&
-      _event_id == other._event_id &&
-      DeepCollectionEquality().equals(_Stocks, other._Stocks) &&
-      _name == other._name &&
-      _unit_price == other._unit_price;
+      _product_id == other._product_id &&
+      _amount == other._amount &&
+      _purchased_price == other._purchased_price;
   }
   
   @override
@@ -129,11 +111,11 @@ class Product extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Product {");
+    buffer.write("Stock {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("event_id=" + "$_event_id" + ", ");
-    buffer.write("name=" + "$_name" + ", ");
-    buffer.write("unit_price=" + (_unit_price != null ? _unit_price!.toString() : "null") + ", ");
+    buffer.write("product_id=" + "$_product_id" + ", ");
+    buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
+    buffer.write("purchased_price=" + (_purchased_price != null ? _purchased_price!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -141,43 +123,33 @@ class Product extends Model {
     return buffer.toString();
   }
   
-  Product copyWith({String? id, String? event_id, List<Stock>? Stocks, String? name, int? unit_price}) {
-    return Product._internal(
+  Stock copyWith({String? id, String? product_id, int? amount, int? purchased_price}) {
+    return Stock._internal(
       id: id ?? this.id,
-      event_id: event_id ?? this.event_id,
-      Stocks: Stocks ?? this.Stocks,
-      name: name ?? this.name,
-      unit_price: unit_price ?? this.unit_price);
+      product_id: product_id ?? this.product_id,
+      amount: amount ?? this.amount,
+      purchased_price: purchased_price ?? this.purchased_price);
   }
   
-  Product.fromJson(Map<String, dynamic> json)  
+  Stock.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _event_id = json['event_id'],
-      _Stocks = json['Stocks'] is List
-        ? (json['Stocks'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => Stock.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
-      _name = json['name'],
-      _unit_price = (json['unit_price'] as num?)?.toInt(),
+      _product_id = json['product_id'],
+      _amount = (json['amount'] as num?)?.toInt(),
+      _purchased_price = (json['purchased_price'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'event_id': _event_id, 'Stocks': _Stocks?.map((Stock? e) => e?.toJson()).toList(), 'name': _name, 'unit_price': _unit_price, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'product_id': _product_id, 'amount': _amount, 'purchased_price': _purchased_price, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "product.id");
-  static final QueryField EVENT_ID = QueryField(fieldName: "event_id");
-  static final QueryField STOCKS = QueryField(
-    fieldName: "Stocks",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Stock).toString()));
-  static final QueryField NAME = QueryField(fieldName: "name");
-  static final QueryField UNIT_PRICE = QueryField(fieldName: "unit_price");
+  static final QueryField ID = QueryField(fieldName: "stock.id");
+  static final QueryField PRODUCT_ID = QueryField(fieldName: "product_id");
+  static final QueryField AMOUNT = QueryField(fieldName: "amount");
+  static final QueryField PURCHASED_PRICE = QueryField(fieldName: "purchased_price");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Product";
-    modelSchemaDefinition.pluralName = "Products";
+    modelSchemaDefinition.name = "Stock";
+    modelSchemaDefinition.pluralName = "Stocks";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
@@ -193,27 +165,20 @@ class Product extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Product.EVENT_ID,
+      key: Stock.PRODUCT_ID,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Product.STOCKS,
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Stock.AMOUNT,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Stock.PURCHASED_PRICE,
       isRequired: false,
-      ofModelName: (Stock).toString(),
-      associatedKey: Stock.PRODUCT_ID
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Product.NAME,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Product.UNIT_PRICE,
-      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
     
@@ -233,11 +198,11 @@ class Product extends Model {
   });
 }
 
-class _ProductModelType extends ModelType<Product> {
-  const _ProductModelType();
+class _StockModelType extends ModelType<Stock> {
+  const _StockModelType();
   
   @override
-  Product fromJson(Map<String, dynamic> jsonData) {
-    return Product.fromJson(jsonData);
+  Stock fromJson(Map<String, dynamic> jsonData) {
+    return Stock.fromJson(jsonData);
   }
 }

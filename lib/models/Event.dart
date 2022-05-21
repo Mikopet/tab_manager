@@ -19,7 +19,9 @@
 
 // ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
@@ -31,6 +33,7 @@ class Event extends Model {
   final String? _name;
   final TemporalDate? _start_date;
   final TemporalDate? _end_date;
+  final List<Product>? _Products;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -81,6 +84,10 @@ class Event extends Model {
     }
   }
   
+  List<Product>? get Products {
+    return _Products;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -89,14 +96,15 @@ class Event extends Model {
     return _updatedAt;
   }
   
-  const Event._internal({required this.id, required name, required start_date, required end_date, createdAt, updatedAt}): _name = name, _start_date = start_date, _end_date = end_date, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Event._internal({required this.id, required name, required start_date, required end_date, Products, createdAt, updatedAt}): _name = name, _start_date = start_date, _end_date = end_date, _Products = Products, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Event({String? id, required String name, required TemporalDate start_date, required TemporalDate end_date}) {
+  factory Event({String? id, required String name, required TemporalDate start_date, required TemporalDate end_date, List<Product>? Products}) {
     return Event._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
       start_date: start_date,
-      end_date: end_date);
+      end_date: end_date,
+      Products: Products != null ? List<Product>.unmodifiable(Products) : Products);
   }
   
   bool equals(Object other) {
@@ -110,7 +118,8 @@ class Event extends Model {
       id == other.id &&
       _name == other._name &&
       _start_date == other._start_date &&
-      _end_date == other._end_date;
+      _end_date == other._end_date &&
+      DeepCollectionEquality().equals(_Products, other._Products);
   }
   
   @override
@@ -132,12 +141,13 @@ class Event extends Model {
     return buffer.toString();
   }
   
-  Event copyWith({String? id, String? name, TemporalDate? start_date, TemporalDate? end_date}) {
+  Event copyWith({String? id, String? name, TemporalDate? start_date, TemporalDate? end_date, List<Product>? Products}) {
     return Event._internal(
       id: id ?? this.id,
       name: name ?? this.name,
       start_date: start_date ?? this.start_date,
-      end_date: end_date ?? this.end_date);
+      end_date: end_date ?? this.end_date,
+      Products: Products ?? this.Products);
   }
   
   Event.fromJson(Map<String, dynamic> json)  
@@ -145,17 +155,26 @@ class Event extends Model {
       _name = json['name'],
       _start_date = json['start_date'] != null ? TemporalDate.fromString(json['start_date']) : null,
       _end_date = json['end_date'] != null ? TemporalDate.fromString(json['end_date']) : null,
+      _Products = json['Products'] is List
+        ? (json['Products'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Product.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'start_date': _start_date?.format(), 'end_date': _end_date?.format(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'start_date': _start_date?.format(), 'end_date': _end_date?.format(), 'Products': _Products?.map((Product? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "event.id");
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField START_DATE = QueryField(fieldName: "start_date");
   static final QueryField END_DATE = QueryField(fieldName: "end_date");
+  static final QueryField PRODUCTS = QueryField(
+    fieldName: "Products",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Product).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Event";
     modelSchemaDefinition.pluralName = "Events";
@@ -189,6 +208,13 @@ class Event extends Model {
       key: Event.END_DATE,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.date)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Event.PRODUCTS,
+      isRequired: false,
+      ofModelName: (Product).toString(),
+      associatedKey: Product.EVENT_ID
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
