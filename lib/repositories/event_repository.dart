@@ -1,3 +1,4 @@
+import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
 import 'package:tab_manager/models/Event.dart';
@@ -29,5 +30,12 @@ class EventRepository {
     );
 
     return events;
+  }
+
+  static Stream<QuerySnapshot<Event>> getEventsStream() {
+    return Amplify.DataStore.observeQuery(
+      Event.classType,
+      sortBy: [Event.END_DATE.descending()],
+    );
   }
 }

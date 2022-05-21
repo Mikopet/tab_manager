@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
@@ -12,6 +15,11 @@ class EventIndexPage extends StatefulWidget {
 }
 
 class _EventIndexPageState extends State<EventIndexPage> {
+  List<Event> _events = [];
+  bool isSynced = false;
+
+  Stream<QuerySnapshot<Event>> stream = EventRepository.getEventsStream();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,35 +37,26 @@ class _EventIndexPageState extends State<EventIndexPage> {
   }
 
   Widget indexWidget() {
-    return FutureBuilder<List<Event>>(
-      future: EventRepository.getEvents(),
-      builder: (context, AsyncSnapshot<List<Event>> snapshot) {
-        if (!snapshot.hasData ||
-            snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2,
-                child: const Center(child: CircularProgressIndicator())),
-          );
-        }
+    stream.listen((QuerySnapshot<Event> snapshot) {
+      setState(() {
+        _events = snapshot.items;
+        isSynced = snapshot.isSynced;
+      });
+    });
 
-        return ListView.builder(
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            Event event = snapshot.data![index];
-            return ListTile(
-              title: Text(event.name),
-              subtitle: Text('${event.start_date} - ${event.end_date}'),
-              leading: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  Center(child: Icon(Icons.event)),
-                ],
-              ),
-            );
-          },
+    return ListView.builder(
+      itemCount: _events.length,
+      itemBuilder: (context, index) {
+        Event event = _events[index];
+        return ListTile(
+          title: Text(event.name),
+          subtitle: Text('${event.start_date} - ${event.end_date}'),
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Center(child: Icon(Icons.event)),
+            ],
+          ),
         );
       },
     );
