@@ -9,8 +9,6 @@ class QRScanPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _QRScanPageState();
-  @override
-  final Key key = const Key('QRScanPage');
 }
 
 class _QRScanPageState extends State<QRScanPage> {

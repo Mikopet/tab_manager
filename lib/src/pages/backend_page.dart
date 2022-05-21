@@ -5,17 +5,12 @@ import 'package:tab_manager/src/pages/qr_scan_page.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 
 class BackendPage extends StatefulWidget {
-  const BackendPage({
-    Key? key,
-    required this.refresh,
-  }) : super(key: key);
+  const BackendPage({Key? key, required this.refresh}) : super(key: key);
 
   final ValueChanged<String> refresh;
 
   @override
   State<BackendPage> createState() => _BackendPageState();
-  @override
-  final Key key = const Key('BackendPage');
 }
 
 class _BackendPageState extends State<BackendPage> {
@@ -69,7 +64,7 @@ class _BackendPageState extends State<BackendPage> {
 
   void _storeConfiguration(BuildContext context) async {
     final String qrData = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const QRScanPage(),
+      builder: (context) => const QRScanPage(key: Key('QRScanPage')),
     ));
 
     // TODO: validation

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/components/connection_indicator.dart';
-import 'package:tab_manager/src/pages/admin_page.dart';
+import 'package:tab_manager/src/pages/admin/admin_page.dart';
 import 'package:tab_manager/src/pages/settings_page.dart';
 
 class NavDrawer extends StatelessWidget {

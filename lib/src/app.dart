@@ -20,7 +20,10 @@ class AppState extends State<TabManager> {
       return MaterialApp(
         title: 'TabManager',
         theme: appTheme,
-        home: const HomePage(title: 'TabManager'),
+        home: const HomePage(
+          key: Key('HomePage'),
+          title: 'TabManager Test',
+        ),
       );
     }
 
@@ -30,7 +33,7 @@ class AppState extends State<TabManager> {
         builder: Authenticator.builder(),
         title: 'TabManager',
         theme: appTheme,
-        home: const HomePage(title: 'TabManager'),
+        home: const HomePage(key: Key('HomePage'), title: 'TabManager'),
       ),
     );
   }

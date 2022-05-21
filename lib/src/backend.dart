@@ -96,7 +96,10 @@ class BackendState extends State<BackendProvider> {
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.black,
       ),
-      home: BackendPage(refresh: _configureAmplify),
+      home: BackendPage(
+        key: const Key('BackendPage'),
+        refresh: _configureAmplify,
+      ),
     );
   }
 }
