@@ -20,7 +20,8 @@ class _ProductIndexPageState extends State<ProductIndexPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (c) => const ProductAddPage()));
+              .push(MaterialPageRoute(builder: (c) => const ProductAddPage()))
+              .then((_) => setState(() {}));
         },
         tooltip: 'add Product',
         child: const Icon(Icons.add),
