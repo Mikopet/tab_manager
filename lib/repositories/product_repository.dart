@@ -12,15 +12,6 @@ class ProductRepository {
     }
   }
 
-  static Future<List<Product>> getProducts() async {
-    List<Product> products = await Amplify.DataStore.query(
-      Product.classType,
-    );
-
-    return products;
-  }
-
-  // Streams
   static Stream<QuerySnapshot<Product>> getProductsStream() {
     return Amplify.DataStore.observeQuery(
       Product.classType,

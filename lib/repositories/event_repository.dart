@@ -12,27 +12,6 @@ class EventRepository {
     }
   }
 
-  static Future<List<Event>> getEvents() async {
-    List<Event> events = await Amplify.DataStore.query(
-      Event.classType,
-    );
-
-    return events;
-  }
-
-  static Future<List<Event>> getOngoingEvents() async {
-    List<Event> events = await Amplify.DataStore.query(
-      Event.classType,
-      where: Event.START_DATE.le(TemporalDate.now()).and(
-            Event.END_DATE.ge(TemporalDate.now()),
-          ),
-      sortBy: [Event.END_DATE.descending()],
-    );
-
-    return events;
-  }
-
-  // Streams
   static Stream<QuerySnapshot<Event>> getEventsStream() {
     return Amplify.DataStore.observeQuery(
       Event.classType,
@@ -44,6 +23,16 @@ class EventRepository {
     return Amplify.DataStore.observeQuery(
       Event.classType,
       where: Event.END_DATE.ge(TemporalDate.now()),
+      sortBy: [Event.START_DATE.ascending()],
+    );
+  }
+
+  static Stream<QuerySnapshot<Event>> getOngoingEventsStream() {
+    return Amplify.DataStore.observeQuery(
+      Event.classType,
+      where: Event.START_DATE.le(TemporalDate.now()).and(
+            Event.END_DATE.ge(TemporalDate.now()),
+          ),
       sortBy: [Event.START_DATE.ascending()],
     );
   }
