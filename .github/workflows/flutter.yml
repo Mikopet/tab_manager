@@ -23,6 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
 
       - name: "Get dependencies"
         run: flutter pub get
@@ -93,6 +96,9 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
 
       - name: "Run integration tests (android SDK #${{ matrix.api-level }})"
         uses: reactivecircus/android-emulator-runner@v2
@@ -128,6 +134,9 @@ jobs:
         run: xcrun simctl boot "${{ matrix.device }}"
 
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
 
       - name: "Get dependencies"
         run: flutter pub get
@@ -141,6 +150,9 @@ jobs:
     needs: [ test_unit, test_android, test_ios ]
     steps:
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
 
   # Build ios package
   build_ios:
@@ -148,6 +160,9 @@ jobs:
     needs: [ test_unit, test_android, test_ios ]
     steps:
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
 
   # Publish android package
   deploy_android:
@@ -155,6 +170,9 @@ jobs:
     needs: build_android
     steps:
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
 
   # Publish ios package
   deploy_ios:
@@ -162,3 +180,6 @@ jobs:
     needs: build_ios
     steps:
       - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
