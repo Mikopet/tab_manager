@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +15,6 @@ class EventIndexPage extends StatefulWidget {
 class _EventIndexPageState extends State<EventIndexPage> {
   List<Event> _events = [];
   bool isSynced = false;
-
   Stream<QuerySnapshot<Event>> stream = EventRepository.getEventsStream();
 
   @override

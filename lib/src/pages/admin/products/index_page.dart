@@ -1,3 +1,4 @@
+import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
@@ -12,6 +13,10 @@ class ProductIndexPage extends StatefulWidget {
 }
 
 class _ProductIndexPageState extends State<ProductIndexPage> {
+  List<Product> _products = [];
+  bool isSynced = false;
+  Stream<QuerySnapshot<Product>> stream = ProductRepository.getProductsStream();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,8 +25,7 @@ class _ProductIndexPageState extends State<ProductIndexPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (c) => const ProductAddPage()))
-              .then((_) => setState(() {}));
+              .push(MaterialPageRoute(builder: (c) => const ProductAddPage()));
         },
         tooltip: 'add Product',
         child: const Icon(Icons.add),
@@ -30,35 +34,26 @@ class _ProductIndexPageState extends State<ProductIndexPage> {
   }
 
   Widget indexWidget() {
-    return FutureBuilder<List<Product>>(
-      future: ProductRepository.getProducts(),
-      builder: (context, AsyncSnapshot<List<Product>> snapshot) {
-        if (!snapshot.hasData ||
-            snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 2,
-                child: const Center(child: CircularProgressIndicator())),
-          );
-        }
+    stream.listen((QuerySnapshot<Product> snapshot) {
+      setState(() {
+        _products = snapshot.items;
+        isSynced = snapshot.isSynced;
+      });
+    });
 
-        return ListView.builder(
-          itemCount: snapshot.data!.length,
-          itemBuilder: (context, index) {
-            Product product = snapshot.data![index];
-            return ListTile(
-              title: Text(product.name),
-              //subtitle: Text('${product.start_date} - ${product.end_date}'),
-              leading: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  Center(child: Icon(Icons.wine_bar)),
-                ],
-              ),
-            );
-          },
+    return ListView.builder(
+      itemCount: _products.length,
+      itemBuilder: (context, index) {
+        Product product = _products[index];
+        return ListTile(
+          title: Text(product.name),
+          subtitle: Text('${product.unit_price}'), // TODO: add currency
+          leading: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Center(child: Icon(Icons.event)),
+            ],
+          ),
         );
       },
     );
