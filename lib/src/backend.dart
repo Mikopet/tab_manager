@@ -81,6 +81,8 @@ class BackendState extends State<BackendProvider> {
   @override
   Widget build(BuildContext context) {
     // TODO: perhaps a FutureBuilder with a CircularLoader is valid here
+    // https://docs.amplify.aws/start/getting-started/integrate/q/integration/flutter/#configure-amplify
+    // this has an idea
     if (Amplify.isConfigured) {
       if (_amplifyConfig != '{}') {
         // TODO: this is not dynamic, need some refactor

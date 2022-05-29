@@ -32,10 +32,19 @@ class EventRepository {
     return events;
   }
 
+  // Streams
   static Stream<QuerySnapshot<Event>> getEventsStream() {
     return Amplify.DataStore.observeQuery(
       Event.classType,
       sortBy: [Event.END_DATE.descending()],
+    );
+  }
+
+  static Stream<QuerySnapshot<Event>> getNonPastEventsStream() {
+    return Amplify.DataStore.observeQuery(
+      Event.classType,
+      where: Event.END_DATE.ge(TemporalDate.now()),
+      sortBy: [Event.START_DATE.ascending()],
     );
   }
 }
