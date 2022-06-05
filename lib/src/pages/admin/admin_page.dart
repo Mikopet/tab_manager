@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/pages/admin/events/index_page.dart';
 import 'package:tab_manager/src/pages/admin/products/index_page.dart';
+import 'package:tab_manager/src/pages/admin/stocks/index_page.dart';
 
 class AdminPage extends StatefulWidget {
   const AdminPage({Key? key}) : super(key: key);
@@ -31,6 +32,12 @@ class _AdminPageState extends State<AdminPage> {
             child: ElevatedButton(
               onPressed: () => _navigateTo(context, const EventIndexPage()),
               child: const Text('Events'),
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () => _navigateTo(context, const StockIndexPage()),
+              child: const Text('Stocks'),
             ),
           ),
         ],

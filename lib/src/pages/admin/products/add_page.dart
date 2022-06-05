@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +17,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
   final _nameController = TextEditingController();
   final _unitPriceController = TextEditingController();
 
-  late String _selectedEventID;
+  late Event _selectedEvent;
   List<Event> _events = [];
   bool isSynced = false;
   Stream<QuerySnapshot<Event>> stream =
@@ -32,7 +30,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
     Product product = Product(
       name: name,
       unit_price: unitPrice,
-      event_id: _selectedEventID,
+      event: _selectedEvent,
     );
 
     await ProductRepository.addProduct(product);
@@ -56,9 +54,8 @@ class _ProductAddPageState extends State<ProductAddPage> {
       });
     });
 
-    return DropdownButtonFormField(
-      // TODO: autoselect without error (perhaps waiting for isSynced to be true)
-      // value: _events.first.id,
+    return DropdownButtonFormField<Event>(
+      // value: _events.first,
       hint: const Text('Event'),
       isExpanded: true,
       isDense: true,
@@ -68,15 +65,14 @@ class _ProductAddPageState extends State<ProductAddPage> {
         icon: Icon(Icons.event_available),
         contentPadding: EdgeInsets.fromLTRB(10, 10, 10, 40),
       ),
-      onChanged: (value) {
+      onChanged: (Event? value) {
         setState(() {
-          log(value.toString());
-          _selectedEventID = value.toString();
+          _selectedEvent = value!;
         });
       },
       items: _events.map((Event e) {
         return DropdownMenuItem(
-          value: e.id,
+          value: e,
           child: ListTile(
             title: Text(e.name),
             subtitle: Text("${e.start_date}-${e.end_date}"),
@@ -110,7 +106,7 @@ class _ProductAddPageState extends State<ProductAddPage> {
                 keyboardType: TextInputType.number,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly
-                ], // Only number
+                ],
               ),
               dropdown(context),
               ElevatedButton(onPressed: _save, child: const Text('Save'))

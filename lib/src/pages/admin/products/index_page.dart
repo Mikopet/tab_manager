@@ -46,8 +46,10 @@ class _ProductIndexPageState extends State<ProductIndexPage> {
       itemBuilder: (context, index) {
         Product product = _products[index];
         return ListTile(
-          title: Text(product.name),
-          subtitle: Text('${product.unit_price}'), // TODO: add currency
+          title: Text('${product.name} - ${product.unit_price}'),
+          // TODO: add currency
+          subtitle:
+              Text('${product.event.start_date} - ${product.event.end_date}'),
           leading: Row(
             mainAxisSize: MainAxisSize.min,
             children: const <Widget>[
