@@ -1,7 +1,9 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/components/connection_indicator.dart';
 import 'package:tab_manager/src/pages/admin/admin_page.dart';
+import 'package:tab_manager/src/pages/consumption_page.dart';
 import 'package:tab_manager/src/pages/settings_page.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -38,13 +40,13 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.input_rounded),
             title: const Text('Consumption'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => _navigateTo(context, const ConsumptionPage()),
           ),
-          ListTile(
-            leading: const Icon(Icons.book_rounded),
-            title: const Text('Manual'),
-            onTap: () => {Navigator.of(context).pop()},
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.book_rounded),
+          //   title: const Text('Manual'),
+          //   onTap: () => {Navigator.of(context).pop()},
+          // ),
           ListTile(
             leading: const Icon(Icons.settings_rounded),
             title: const Text('Settings'),
@@ -53,7 +55,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),
             title: const Text('Logout'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => Amplify.Auth.signOut(),
           ),
         ],
       ),
