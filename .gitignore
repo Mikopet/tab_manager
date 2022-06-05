@@ -45,6 +45,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+
+# This will be a public repository, so there is no point to share this data at all
+amplify/team-provider-info.json
+
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
 amplify/.config/local-*
@@ -65,6 +69,3 @@ amplifytools.xcconfig
 .secret-*
 **.sample
 #amplify-do-not-edit-end
-
-# This will be a public repository, so there is no point to share this data at all
-amplify/team-provider-info.json
