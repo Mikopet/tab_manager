@@ -17,8 +17,9 @@
 // Generated files can be excluded from analysis in analysis_options.yaml
 // For more info, see: https://dart.dev/guides/language/analysis-options#excluding-code-from-analysis
 
-// ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
+// ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
+import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
@@ -28,9 +29,10 @@ import 'package:flutter/foundation.dart';
 class Stock extends Model {
   static const classType = const _StockModelType();
   final String id;
-  final String? _product_id;
   final int? _amount;
-  final int? _purchased_price;
+  final int? _supply_price;
+  final TemporalDateTime? _supply_time;
+  final Product? _product;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -40,19 +42,6 @@ class Stock extends Model {
   @override
   String getId() {
     return id;
-  }
-  
-  String get product_id {
-    try {
-      return _product_id!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
   }
   
   int get amount {
@@ -68,8 +57,25 @@ class Stock extends Model {
     }
   }
   
-  int? get purchased_price {
-    return _purchased_price;
+  int? get supply_price {
+    return _supply_price;
+  }
+  
+  TemporalDateTime? get supply_time {
+    return _supply_time;
+  }
+  
+  Product get product {
+    try {
+      return _product!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get createdAt {
@@ -80,14 +86,15 @@ class Stock extends Model {
     return _updatedAt;
   }
   
-  const Stock._internal({required this.id, required product_id, required amount, purchased_price, createdAt, updatedAt}): _product_id = product_id, _amount = amount, _purchased_price = purchased_price, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Stock._internal({required this.id, required amount, supply_price, supply_time, required product, createdAt, updatedAt}): _amount = amount, _supply_price = supply_price, _supply_time = supply_time, _product = product, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Stock({String? id, required String product_id, required int amount, int? purchased_price}) {
+  factory Stock({String? id, required int amount, int? supply_price, TemporalDateTime? supply_time, required Product product}) {
     return Stock._internal(
       id: id == null ? UUID.getUUID() : id,
-      product_id: product_id,
       amount: amount,
-      purchased_price: purchased_price);
+      supply_price: supply_price,
+      supply_time: supply_time,
+      product: product);
   }
   
   bool equals(Object other) {
@@ -99,9 +106,10 @@ class Stock extends Model {
     if (identical(other, this)) return true;
     return other is Stock &&
       id == other.id &&
-      _product_id == other._product_id &&
       _amount == other._amount &&
-      _purchased_price == other._purchased_price;
+      _supply_price == other._supply_price &&
+      _supply_time == other._supply_time &&
+      _product == other._product;
   }
   
   @override
@@ -113,9 +121,10 @@ class Stock extends Model {
     
     buffer.write("Stock {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("product_id=" + "$_product_id" + ", ");
     buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
-    buffer.write("purchased_price=" + (_purchased_price != null ? _purchased_price!.toString() : "null") + ", ");
+    buffer.write("supply_price=" + (_supply_price != null ? _supply_price!.toString() : "null") + ", ");
+    buffer.write("supply_time=" + (_supply_time != null ? _supply_time!.format() : "null") + ", ");
+    buffer.write("product=" + (_product != null ? _product!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -123,30 +132,37 @@ class Stock extends Model {
     return buffer.toString();
   }
   
-  Stock copyWith({String? id, String? product_id, int? amount, int? purchased_price}) {
+  Stock copyWith({String? id, int? amount, int? supply_price, TemporalDateTime? supply_time, Product? product}) {
     return Stock._internal(
       id: id ?? this.id,
-      product_id: product_id ?? this.product_id,
       amount: amount ?? this.amount,
-      purchased_price: purchased_price ?? this.purchased_price);
+      supply_price: supply_price ?? this.supply_price,
+      supply_time: supply_time ?? this.supply_time,
+      product: product ?? this.product);
   }
   
   Stock.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _product_id = json['product_id'],
       _amount = (json['amount'] as num?)?.toInt(),
-      _purchased_price = (json['purchased_price'] as num?)?.toInt(),
+      _supply_price = (json['supply_price'] as num?)?.toInt(),
+      _supply_time = json['supply_time'] != null ? TemporalDateTime.fromString(json['supply_time']) : null,
+      _product = json['product']?['serializedData'] != null
+        ? Product.fromJson(new Map<String, dynamic>.from(json['product']['serializedData']))
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'product_id': _product_id, 'amount': _amount, 'purchased_price': _purchased_price, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'amount': _amount, 'supply_price': _supply_price, 'supply_time': _supply_time?.format(), 'product': _product?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "stock.id");
-  static final QueryField PRODUCT_ID = QueryField(fieldName: "product_id");
   static final QueryField AMOUNT = QueryField(fieldName: "amount");
-  static final QueryField PURCHASED_PRICE = QueryField(fieldName: "purchased_price");
+  static final QueryField SUPPLY_PRICE = QueryField(fieldName: "supply_price");
+  static final QueryField SUPPLY_TIME = QueryField(fieldName: "supply_time");
+  static final QueryField PRODUCT = QueryField(
+    fieldName: "product",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Product).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Stock";
     modelSchemaDefinition.pluralName = "Stocks";
@@ -155,20 +171,22 @@ class Stock extends Model {
       AuthRule(
         authStrategy: AuthStrategy.PUBLIC,
         operations: [
+          ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.GROUPS,
+        groupClaim: "cognito:groups",
+        groups: [ "Admin" ],
+        provider: AuthRuleProvider.USERPOOLS,
+        operations: [
+          ModelOperation.READ,
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
+          ModelOperation.DELETE
         ])
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Stock.PRODUCT_ID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Stock.AMOUNT,
@@ -177,9 +195,22 @@ class Stock extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Stock.PURCHASED_PRICE,
+      key: Stock.SUPPLY_PRICE,
       isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Stock.SUPPLY_TIME,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Stock.PRODUCT,
+      isRequired: true,
+      targetName: "productStocksId",
+      ofModelName: (Product).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

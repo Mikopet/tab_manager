@@ -17,7 +17,7 @@
 // Generated files can be excluded from analysis in analysis_options.yaml
 // For more info, see: https://dart.dev/guides/language/analysis-options#excluding-code-from-analysis
 
-// ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
+// ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
@@ -33,7 +33,7 @@ class Event extends Model {
   final String? _name;
   final TemporalDate? _start_date;
   final TemporalDate? _end_date;
-  final List<Product>? _Products;
+  final List<Product>? _products;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -84,8 +84,8 @@ class Event extends Model {
     }
   }
   
-  List<Product>? get Products {
-    return _Products;
+  List<Product>? get products {
+    return _products;
   }
   
   TemporalDateTime? get createdAt {
@@ -96,15 +96,15 @@ class Event extends Model {
     return _updatedAt;
   }
   
-  const Event._internal({required this.id, required name, required start_date, required end_date, Products, createdAt, updatedAt}): _name = name, _start_date = start_date, _end_date = end_date, _Products = Products, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Event._internal({required this.id, required name, required start_date, required end_date, products, createdAt, updatedAt}): _name = name, _start_date = start_date, _end_date = end_date, _products = products, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Event({String? id, required String name, required TemporalDate start_date, required TemporalDate end_date, List<Product>? Products}) {
+  factory Event({String? id, required String name, required TemporalDate start_date, required TemporalDate end_date, List<Product>? products}) {
     return Event._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
       start_date: start_date,
       end_date: end_date,
-      Products: Products != null ? List<Product>.unmodifiable(Products) : Products);
+      products: products != null ? List<Product>.unmodifiable(products) : products);
   }
   
   bool equals(Object other) {
@@ -119,7 +119,7 @@ class Event extends Model {
       _name == other._name &&
       _start_date == other._start_date &&
       _end_date == other._end_date &&
-      DeepCollectionEquality().equals(_Products, other._Products);
+      DeepCollectionEquality().equals(_products, other._products);
   }
   
   @override
@@ -141,13 +141,13 @@ class Event extends Model {
     return buffer.toString();
   }
   
-  Event copyWith({String? id, String? name, TemporalDate? start_date, TemporalDate? end_date, List<Product>? Products}) {
+  Event copyWith({String? id, String? name, TemporalDate? start_date, TemporalDate? end_date, List<Product>? products}) {
     return Event._internal(
       id: id ?? this.id,
       name: name ?? this.name,
       start_date: start_date ?? this.start_date,
       end_date: end_date ?? this.end_date,
-      Products: Products ?? this.Products);
+      products: products ?? this.products);
   }
   
   Event.fromJson(Map<String, dynamic> json)  
@@ -155,8 +155,8 @@ class Event extends Model {
       _name = json['name'],
       _start_date = json['start_date'] != null ? TemporalDate.fromString(json['start_date']) : null,
       _end_date = json['end_date'] != null ? TemporalDate.fromString(json['end_date']) : null,
-      _Products = json['Products'] is List
-        ? (json['Products'] as List)
+      _products = json['products'] is List
+        ? (json['products'] as List)
           .where((e) => e?['serializedData'] != null)
           .map((e) => Product.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
@@ -165,7 +165,7 @@ class Event extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'start_date': _start_date?.format(), 'end_date': _end_date?.format(), 'Products': _Products?.map((Product? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'start_date': _start_date?.format(), 'end_date': _end_date?.format(), 'products': _products?.map((Product? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "event.id");
@@ -173,7 +173,7 @@ class Event extends Model {
   static final QueryField START_DATE = QueryField(fieldName: "start_date");
   static final QueryField END_DATE = QueryField(fieldName: "end_date");
   static final QueryField PRODUCTS = QueryField(
-    fieldName: "Products",
+    fieldName: "products",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Product).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Event";
@@ -183,10 +183,18 @@ class Event extends Model {
       AuthRule(
         authStrategy: AuthStrategy.PUBLIC,
         operations: [
+          ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.GROUPS,
+        groupClaim: "cognito:groups",
+        groups: [ "Admin" ],
+        provider: AuthRuleProvider.USERPOOLS,
+        operations: [
+          ModelOperation.READ,
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
+          ModelOperation.DELETE
         ])
     ];
     
@@ -214,7 +222,7 @@ class Event extends Model {
       key: Event.PRODUCTS,
       isRequired: false,
       ofModelName: (Product).toString(),
-      associatedKey: Product.EVENT_ID
+      associatedKey: Product.EVENT
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

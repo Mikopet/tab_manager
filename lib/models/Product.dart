@@ -17,7 +17,7 @@
 // Generated files can be excluded from analysis in analysis_options.yaml
 // For more info, see: https://dart.dev/guides/language/analysis-options#excluding-code-from-analysis
 
-// ignore_for_file: public_member_api_docs, file_names, unnecessary_new, prefer_if_null_operators, prefer_const_constructors, slash_for_doc_comments, annotate_overrides, non_constant_identifier_names, unnecessary_string_interpolations, prefer_adjacent_string_concatenation, unnecessary_const, dead_code
+// ignore_for_file: public_member_api_docs, annotate_overrides, dead_code, dead_codepublic_member_api_docs, depend_on_referenced_packages, file_names, library_private_types_in_public_api, no_leading_underscores_for_library_prefixes, no_leading_underscores_for_local_identifiers, non_constant_identifier_names, null_check_on_nullable_type_parameter, prefer_adjacent_string_concatenation, prefer_const_constructors, prefer_if_null_operators, prefer_interpolation_to_compose_strings, slash_for_doc_comments, sort_child_properties_last, unnecessary_const, unnecessary_constructor_name, unnecessary_late, unnecessary_new, unnecessary_null_aware_assignments, unnecessary_nullable_for_final_variable_declarations, unnecessary_string_interpolations, use_build_context_synchronously
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
@@ -30,10 +30,10 @@ import 'package:flutter/foundation.dart';
 class Product extends Model {
   static const classType = const _ProductModelType();
   final String id;
-  final String? _event_id;
-  final List<Stock>? _Stocks;
   final String? _name;
   final int? _unit_price;
+  final Event? _event;
+  final List<Stock>? _stocks;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -43,23 +43,6 @@ class Product extends Model {
   @override
   String getId() {
     return id;
-  }
-  
-  String get event_id {
-    try {
-      return _event_id!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
-  }
-  
-  List<Stock>? get Stocks {
-    return _Stocks;
   }
   
   String get name {
@@ -88,6 +71,23 @@ class Product extends Model {
     }
   }
   
+  Event get event {
+    try {
+      return _event!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  List<Stock>? get stocks {
+    return _stocks;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -96,15 +96,15 @@ class Product extends Model {
     return _updatedAt;
   }
   
-  const Product._internal({required this.id, required event_id, Stocks, required name, required unit_price, createdAt, updatedAt}): _event_id = event_id, _Stocks = Stocks, _name = name, _unit_price = unit_price, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Product._internal({required this.id, required name, required unit_price, required event, stocks, createdAt, updatedAt}): _name = name, _unit_price = unit_price, _event = event, _stocks = stocks, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Product({String? id, required String event_id, List<Stock>? Stocks, required String name, required int unit_price}) {
+  factory Product({String? id, required String name, required int unit_price, required Event event, List<Stock>? stocks}) {
     return Product._internal(
       id: id == null ? UUID.getUUID() : id,
-      event_id: event_id,
-      Stocks: Stocks != null ? List<Stock>.unmodifiable(Stocks) : Stocks,
       name: name,
-      unit_price: unit_price);
+      unit_price: unit_price,
+      event: event,
+      stocks: stocks != null ? List<Stock>.unmodifiable(stocks) : stocks);
   }
   
   bool equals(Object other) {
@@ -116,10 +116,10 @@ class Product extends Model {
     if (identical(other, this)) return true;
     return other is Product &&
       id == other.id &&
-      _event_id == other._event_id &&
-      DeepCollectionEquality().equals(_Stocks, other._Stocks) &&
       _name == other._name &&
-      _unit_price == other._unit_price;
+      _unit_price == other._unit_price &&
+      _event == other._event &&
+      DeepCollectionEquality().equals(_stocks, other._stocks);
   }
   
   @override
@@ -131,9 +131,9 @@ class Product extends Model {
     
     buffer.write("Product {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("event_id=" + "$_event_id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("unit_price=" + (_unit_price != null ? _unit_price!.toString() : "null") + ", ");
+    buffer.write("event=" + (_event != null ? _event!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -141,40 +141,44 @@ class Product extends Model {
     return buffer.toString();
   }
   
-  Product copyWith({String? id, String? event_id, List<Stock>? Stocks, String? name, int? unit_price}) {
+  Product copyWith({String? id, String? name, int? unit_price, Event? event, List<Stock>? stocks}) {
     return Product._internal(
       id: id ?? this.id,
-      event_id: event_id ?? this.event_id,
-      Stocks: Stocks ?? this.Stocks,
       name: name ?? this.name,
-      unit_price: unit_price ?? this.unit_price);
+      unit_price: unit_price ?? this.unit_price,
+      event: event ?? this.event,
+      stocks: stocks ?? this.stocks);
   }
   
   Product.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _event_id = json['event_id'],
-      _Stocks = json['Stocks'] is List
-        ? (json['Stocks'] as List)
+      _name = json['name'],
+      _unit_price = (json['unit_price'] as num?)?.toInt(),
+      _event = json['event']?['serializedData'] != null
+        ? Event.fromJson(new Map<String, dynamic>.from(json['event']['serializedData']))
+        : null,
+      _stocks = json['stocks'] is List
+        ? (json['stocks'] as List)
           .where((e) => e?['serializedData'] != null)
           .map((e) => Stock.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
-      _name = json['name'],
-      _unit_price = (json['unit_price'] as num?)?.toInt(),
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'event_id': _event_id, 'Stocks': _Stocks?.map((Stock? e) => e?.toJson()).toList(), 'name': _name, 'unit_price': _unit_price, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'unit_price': _unit_price, 'event': _event?.toJson(), 'stocks': _stocks?.map((Stock? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "product.id");
-  static final QueryField EVENT_ID = QueryField(fieldName: "event_id");
-  static final QueryField STOCKS = QueryField(
-    fieldName: "Stocks",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Stock).toString()));
   static final QueryField NAME = QueryField(fieldName: "name");
   static final QueryField UNIT_PRICE = QueryField(fieldName: "unit_price");
+  static final QueryField EVENT = QueryField(
+    fieldName: "event",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Event).toString()));
+  static final QueryField STOCKS = QueryField(
+    fieldName: "stocks",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Stock).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Product";
     modelSchemaDefinition.pluralName = "Products";
@@ -183,27 +187,22 @@ class Product extends Model {
       AuthRule(
         authStrategy: AuthStrategy.PUBLIC,
         operations: [
+          ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.GROUPS,
+        groupClaim: "cognito:groups",
+        groups: [ "Admin" ],
+        provider: AuthRuleProvider.USERPOOLS,
+        operations: [
+          ModelOperation.READ,
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
+          ModelOperation.DELETE
         ])
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Product.EVENT_ID,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Product.STOCKS,
-      isRequired: false,
-      ofModelName: (Stock).toString(),
-      associatedKey: Stock.PRODUCT_ID
-    ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Product.NAME,
@@ -215,6 +214,20 @@ class Product extends Model {
       key: Product.UNIT_PRICE,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.int)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Product.EVENT,
+      isRequired: true,
+      targetName: "eventProductsId",
+      ofModelName: (Event).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Product.STOCKS,
+      isRequired: false,
+      ofModelName: (Stock).toString(),
+      associatedKey: Stock.PRODUCT
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
