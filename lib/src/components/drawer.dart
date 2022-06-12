@@ -7,7 +7,9 @@ import 'package:tab_manager/src/pages/consumption_page.dart';
 import 'package:tab_manager/src/pages/settings_page.dart';
 
 class NavDrawer extends StatelessWidget {
-  const NavDrawer({Key? key}) : super(key: key);
+  const NavDrawer({Key? key, this.admin=false}) : super(key: key);
+
+  final bool admin;
 
   void _navigateTo(c, page) {
     Navigator.of(c).push(MaterialPageRoute(builder: (c) => page));
@@ -32,7 +34,7 @@ class NavDrawer extends StatelessWidget {
                     fit: BoxFit.fill,
                     image: AssetImage('assets/images/cover.webp'))),
           ),
-          ListTile(
+          !admin ? Container() : ListTile(
             leading: const Icon(Icons.edit_note_rounded),
             title: const Text('Admin'),
             onTap: () => _navigateTo(context, const AdminPage()),

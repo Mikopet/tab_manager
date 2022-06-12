@@ -1,5 +1,8 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
 import 'package:tab_manager/repositories/event_repository.dart';
@@ -15,14 +18,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // TODO: refact this somehow, it causes errors :(
+    Amplify.Auth.getCurrentUser().then((AuthUser user) {
+      Amplify.Auth.fetchAuthSession(
+              options: CognitoSessionOptions(getAWSCredentials: true))
+          .then((AuthSession session) {
+        CognitoAuthSession s = session as CognitoAuthSession;
+        String? token = s.userPoolTokens?.accessToken;
+        List groups = [];
+
+        if (token != null) {
+          Map<String, dynamic> payload = JwtDecoder.decode(token);
+          groups.addAll(payload['cognito:groups']);
+        }
+
+        if (groups.contains("Admin")) {
+          setState(() {
+            _isAdmin = true;
+          });
+        }
+      });
+    });
+  }
+
   List<Event> _ongoingEvents = [];
   bool isSynced = false;
-  Stream<QuerySnapshot<Event>> stream =
+  Stream<QuerySnapshot<Event>> ongoingEventStream =
       EventRepository.getOngoingEventsStream();
 
   @override
   Widget build(BuildContext context) {
-    stream.listen((QuerySnapshot<Event> snapshot) {
+    ongoingEventStream.listen((QuerySnapshot<Event> snapshot) {
       setState(() {
         _ongoingEvents = snapshot.items;
         isSynced = snapshot.isSynced;
@@ -31,7 +63,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
-        endDrawer: const NavDrawer(),
+        endDrawer: NavDrawer(admin: _isAdmin),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
