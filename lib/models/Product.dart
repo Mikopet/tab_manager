@@ -34,6 +34,7 @@ class Product extends Model {
   final int? _unit_price;
   final Event? _event;
   final List<Stock>? _stocks;
+  final List<Consumption>? _consumptions;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -88,6 +89,10 @@ class Product extends Model {
     return _stocks;
   }
   
+  List<Consumption>? get consumptions {
+    return _consumptions;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -96,15 +101,16 @@ class Product extends Model {
     return _updatedAt;
   }
   
-  const Product._internal({required this.id, required name, required unit_price, required event, stocks, createdAt, updatedAt}): _name = name, _unit_price = unit_price, _event = event, _stocks = stocks, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Product._internal({required this.id, required name, required unit_price, required event, stocks, consumptions, createdAt, updatedAt}): _name = name, _unit_price = unit_price, _event = event, _stocks = stocks, _consumptions = consumptions, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Product({String? id, required String name, required int unit_price, required Event event, List<Stock>? stocks}) {
+  factory Product({String? id, required String name, required int unit_price, required Event event, List<Stock>? stocks, List<Consumption>? consumptions}) {
     return Product._internal(
       id: id == null ? UUID.getUUID() : id,
       name: name,
       unit_price: unit_price,
       event: event,
-      stocks: stocks != null ? List<Stock>.unmodifiable(stocks) : stocks);
+      stocks: stocks != null ? List<Stock>.unmodifiable(stocks) : stocks,
+      consumptions: consumptions != null ? List<Consumption>.unmodifiable(consumptions) : consumptions);
   }
   
   bool equals(Object other) {
@@ -119,7 +125,8 @@ class Product extends Model {
       _name == other._name &&
       _unit_price == other._unit_price &&
       _event == other._event &&
-      DeepCollectionEquality().equals(_stocks, other._stocks);
+      DeepCollectionEquality().equals(_stocks, other._stocks) &&
+      DeepCollectionEquality().equals(_consumptions, other._consumptions);
   }
   
   @override
@@ -141,13 +148,14 @@ class Product extends Model {
     return buffer.toString();
   }
   
-  Product copyWith({String? id, String? name, int? unit_price, Event? event, List<Stock>? stocks}) {
+  Product copyWith({String? id, String? name, int? unit_price, Event? event, List<Stock>? stocks, List<Consumption>? consumptions}) {
     return Product._internal(
       id: id ?? this.id,
       name: name ?? this.name,
       unit_price: unit_price ?? this.unit_price,
       event: event ?? this.event,
-      stocks: stocks ?? this.stocks);
+      stocks: stocks ?? this.stocks,
+      consumptions: consumptions ?? this.consumptions);
   }
   
   Product.fromJson(Map<String, dynamic> json)  
@@ -163,11 +171,17 @@ class Product extends Model {
           .map((e) => Stock.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
+      _consumptions = json['consumptions'] is List
+        ? (json['consumptions'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Consumption.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'unit_price': _unit_price, 'event': _event?.toJson(), 'stocks': _stocks?.map((Stock? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'unit_price': _unit_price, 'event': _event?.toJson(), 'stocks': _stocks?.map((Stock? e) => e?.toJson()).toList(), 'consumptions': _consumptions?.map((Consumption? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "product.id");
@@ -179,6 +193,9 @@ class Product extends Model {
   static final QueryField STOCKS = QueryField(
     fieldName: "stocks",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Stock).toString()));
+  static final QueryField CONSUMPTIONS = QueryField(
+    fieldName: "consumptions",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Consumption).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Product";
     modelSchemaDefinition.pluralName = "Products";
@@ -195,10 +212,10 @@ class Product extends Model {
         groups: [ "Admin" ],
         provider: AuthRuleProvider.USERPOOLS,
         operations: [
-          ModelOperation.READ,
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
-          ModelOperation.DELETE
+          ModelOperation.DELETE,
+          ModelOperation.READ
         ])
     ];
     
@@ -228,6 +245,13 @@ class Product extends Model {
       isRequired: false,
       ofModelName: (Stock).toString(),
       associatedKey: Stock.PRODUCT
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: Product.CONSUMPTIONS,
+      isRequired: false,
+      ofModelName: (Consumption).toString(),
+      associatedKey: Consumption.PRODUCT
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

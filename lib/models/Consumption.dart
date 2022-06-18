@@ -21,19 +21,17 @@
 
 import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 
-/** This is an auto generated class representing the Event type in your schema. */
+/** This is an auto generated class representing the Consumption type in your schema. */
 @immutable
-class Event extends Model {
-  static const classType = const _EventModelType();
+class Consumption extends Model {
+  static const classType = const _ConsumptionModelType();
   final String id;
-  final String? _name;
-  final TemporalDate? _start_date;
-  final TemporalDate? _end_date;
-  final List<Product>? _products;
+  final Product? _product;
+  final int? _amount;
+  final TemporalDateTime? _time;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -45,9 +43,9 @@ class Event extends Model {
     return id;
   }
   
-  String get name {
+  Product get product {
     try {
-      return _name!;
+      return _product!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -58,9 +56,9 @@ class Event extends Model {
     }
   }
   
-  TemporalDate get start_date {
+  int get amount {
     try {
-      return _start_date!;
+      return _amount!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -71,9 +69,9 @@ class Event extends Model {
     }
   }
   
-  TemporalDate get end_date {
+  TemporalDateTime get time {
     try {
-      return _end_date!;
+      return _time!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -82,10 +80,6 @@ class Event extends Model {
           underlyingException: e.toString()
           );
     }
-  }
-  
-  List<Product>? get products {
-    return _products;
   }
   
   TemporalDateTime? get createdAt {
@@ -96,15 +90,14 @@ class Event extends Model {
     return _updatedAt;
   }
   
-  const Event._internal({required this.id, required name, required start_date, required end_date, products, createdAt, updatedAt}): _name = name, _start_date = start_date, _end_date = end_date, _products = products, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Consumption._internal({required this.id, required product, required amount, required time, createdAt, updatedAt}): _product = product, _amount = amount, _time = time, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Event({String? id, required String name, required TemporalDate start_date, required TemporalDate end_date, List<Product>? products}) {
-    return Event._internal(
+  factory Consumption({String? id, required Product product, required int amount, required TemporalDateTime time}) {
+    return Consumption._internal(
       id: id == null ? UUID.getUUID() : id,
-      name: name,
-      start_date: start_date,
-      end_date: end_date,
-      products: products != null ? List<Product>.unmodifiable(products) : products);
+      product: product,
+      amount: amount,
+      time: time);
   }
   
   bool equals(Object other) {
@@ -114,12 +107,11 @@ class Event extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Event &&
+    return other is Consumption &&
       id == other.id &&
-      _name == other._name &&
-      _start_date == other._start_date &&
-      _end_date == other._end_date &&
-      DeepCollectionEquality().equals(_products, other._products);
+      _product == other._product &&
+      _amount == other._amount &&
+      _time == other._time;
   }
   
   @override
@@ -129,11 +121,11 @@ class Event extends Model {
   String toString() {
     var buffer = new StringBuffer();
     
-    buffer.write("Event {");
+    buffer.write("Consumption {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("name=" + "$_name" + ", ");
-    buffer.write("start_date=" + (_start_date != null ? _start_date!.format() : "null") + ", ");
-    buffer.write("end_date=" + (_end_date != null ? _end_date!.format() : "null") + ", ");
+    buffer.write("product=" + (_product != null ? _product!.toString() : "null") + ", ");
+    buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
+    buffer.write("time=" + (_time != null ? _time!.format() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -141,48 +133,53 @@ class Event extends Model {
     return buffer.toString();
   }
   
-  Event copyWith({String? id, String? name, TemporalDate? start_date, TemporalDate? end_date, List<Product>? products}) {
-    return Event._internal(
+  Consumption copyWith({String? id, Product? product, int? amount, TemporalDateTime? time}) {
+    return Consumption._internal(
       id: id ?? this.id,
-      name: name ?? this.name,
-      start_date: start_date ?? this.start_date,
-      end_date: end_date ?? this.end_date,
-      products: products ?? this.products);
+      product: product ?? this.product,
+      amount: amount ?? this.amount,
+      time: time ?? this.time);
   }
   
-  Event.fromJson(Map<String, dynamic> json)  
+  Consumption.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _name = json['name'],
-      _start_date = json['start_date'] != null ? TemporalDate.fromString(json['start_date']) : null,
-      _end_date = json['end_date'] != null ? TemporalDate.fromString(json['end_date']) : null,
-      _products = json['products'] is List
-        ? (json['products'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => Product.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
+      _product = json['product']?['serializedData'] != null
+        ? Product.fromJson(new Map<String, dynamic>.from(json['product']['serializedData']))
         : null,
+      _amount = (json['amount'] as num?)?.toInt(),
+      _time = json['time'] != null ? TemporalDateTime.fromString(json['time']) : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'start_date': _start_date?.format(), 'end_date': _end_date?.format(), 'products': _products?.map((Product? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'product': _product?.toJson(), 'amount': _amount, 'time': _time?.format(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "event.id");
-  static final QueryField NAME = QueryField(fieldName: "name");
-  static final QueryField START_DATE = QueryField(fieldName: "start_date");
-  static final QueryField END_DATE = QueryField(fieldName: "end_date");
-  static final QueryField PRODUCTS = QueryField(
-    fieldName: "products",
+  static final QueryField ID = QueryField(fieldName: "consumption.id");
+  static final QueryField PRODUCT = QueryField(
+    fieldName: "product",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Product).toString()));
+  static final QueryField AMOUNT = QueryField(fieldName: "amount");
+  static final QueryField TIME = QueryField(fieldName: "time");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "Event";
-    modelSchemaDefinition.pluralName = "Events";
+    modelSchemaDefinition.name = "Consumption";
+    modelSchemaDefinition.pluralName = "Consumptions";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
         authStrategy: AuthStrategy.PUBLIC,
         operations: [
+          ModelOperation.READ
+        ]),
+      AuthRule(
+        authStrategy: AuthStrategy.OWNER,
+        ownerField: "owner",
+        identityClaim: "cognito:username",
+        provider: AuthRuleProvider.USERPOOLS,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
           ModelOperation.READ
         ]),
       AuthRule(
@@ -200,29 +197,23 @@ class Event extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Event.NAME,
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Consumption.PRODUCT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+      targetName: "productConsumptionsId",
+      ofModelName: (Product).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Event.START_DATE,
+      key: Consumption.AMOUNT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
+      ofType: ModelFieldType(ModelFieldTypeEnum.int)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Event.END_DATE,
+      key: Consumption.TIME,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.date)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Event.PRODUCTS,
-      isRequired: false,
-      ofModelName: (Product).toString(),
-      associatedKey: Product.EVENT
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
@@ -241,11 +232,11 @@ class Event extends Model {
   });
 }
 
-class _EventModelType extends ModelType<Event> {
-  const _EventModelType();
+class _ConsumptionModelType extends ModelType<Consumption> {
+  const _ConsumptionModelType();
   
   @override
-  Event fromJson(Map<String, dynamic> jsonData) {
-    return Event.fromJson(jsonData);
+  Consumption fromJson(Map<String, dynamic> jsonData) {
+    return Consumption.fromJson(jsonData);
   }
 }
