@@ -35,10 +35,12 @@ class _ProductIndexPageState extends State<ProductIndexPage> {
 
   Widget indexWidget() {
     stream.listen((QuerySnapshot<Product> snapshot) {
-      setState(() {
-        _products = snapshot.items;
-        isSynced = snapshot.isSynced;
-      });
+      if (mounted) {
+        setState(() {
+          _products = snapshot.items;
+          isSynced = snapshot.isSynced;
+        });
+      }
     });
 
     return ListView.builder(
@@ -48,8 +50,7 @@ class _ProductIndexPageState extends State<ProductIndexPage> {
         return ListTile(
           title: Text('${product.name} - ${product.unit_price}'),
           // TODO: add currency
-          subtitle:
-              Text('${product.event.start_date} - ${product.event.end_date}'),
+          subtitle: Text(product.event.name),
           leading: Row(
             mainAxisSize: MainAxisSize.min,
             children: const <Widget>[

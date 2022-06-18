@@ -35,10 +35,12 @@ class _EventIndexPageState extends State<EventIndexPage> {
 
   Widget indexWidget() {
     stream.listen((QuerySnapshot<Event> snapshot) {
-      setState(() {
-        _events = snapshot.items;
-        isSynced = snapshot.isSynced;
-      });
+      if (mounted) {
+        setState(() {
+          _events = snapshot.items;
+          isSynced = snapshot.isSynced;
+        });
+      }
     });
 
     return ListView.builder(

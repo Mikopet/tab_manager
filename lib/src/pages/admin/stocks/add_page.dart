@@ -123,8 +123,8 @@ class _StockAddPageState extends State<StockAddPage> {
                 controller: _supplyTimeController,
                 decoration: const InputDecoration(
                   filled: true,
-                  labelText: 'Supply Price',
-                  icon: Icon(Icons.price_change),
+                  labelText: 'Supply Time',
+                  icon: Icon(Icons.punch_clock),
                 ),
               ),
               ElevatedButton(onPressed: _save, child: const Text('Save'))

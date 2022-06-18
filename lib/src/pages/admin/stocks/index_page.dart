@@ -35,21 +35,23 @@ class _StockIndexPageState extends State<StockIndexPage> {
 
   Widget indexWidget() {
     stream.listen((QuerySnapshot<Stock> snapshot) {
-      setState(() {
-        _stocks = snapshot.items;
-        isSynced = snapshot.isSynced;
-      });
+      if (mounted) {
+        setState(() {
+          _stocks = snapshot.items;
+          isSynced = snapshot.isSynced;
+        });
+      }
     });
 
     return ListView.builder(
       itemCount: _stocks.length,
       itemBuilder: (context, index) {
         Stock stock = _stocks[index];
-        DateTime? dt = stock.supply_time?.getDateTimeInUtc();
 
+        // TODO: add warn symbols if no time and prive is given
         return ListTile(
           title: Text("${stock.amount} ${stock.product.name}"),
-          subtitle: Text(stock.supply_time?.format() ?? '(no date given)'),
+          subtitle: Text(stock.product.event.name),
           leading: Row(
             mainAxisSize: MainAxisSize.min,
             children: const <Widget>[

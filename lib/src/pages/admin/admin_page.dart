@@ -24,14 +24,14 @@ class _AdminPageState extends State<AdminPage> {
         children: [
           Center(
             child: ElevatedButton(
-              onPressed: () => _navigateTo(context, const ProductIndexPage()),
-              child: const Text('Products'),
+              onPressed: () => _navigateTo(context, const EventIndexPage()),
+              child: const Text('Events'),
             ),
           ),
           Center(
             child: ElevatedButton(
-              onPressed: () => _navigateTo(context, const EventIndexPage()),
-              child: const Text('Events'),
+              onPressed: () => _navigateTo(context, const ProductIndexPage()),
+              child: const Text('Products'),
             ),
           ),
           Center(
