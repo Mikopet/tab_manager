@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
+import 'package:tab_manager/repositories/consumption_repository.dart';
 import 'package:tab_manager/repositories/event_repository.dart';
 import 'package:tab_manager/src/components/drawer.dart';
+import 'package:tab_manager/src/pages/add_consumption_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key, required this.title}) : super(key: key);
@@ -87,10 +89,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         floatingActionButton: _ongoingEvents.isNotEmpty
-            ? const FloatingActionButton(
-                onPressed: null,
+            ? FloatingActionButton(
+                onPressed: () {
+                  _storeConsumption(context); // TODO: handle multiple events
+                },
                 tooltip: 'Add consumption',
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
               )
             : const FloatingActionButton(
                 onPressed: null,
@@ -98,5 +102,20 @@ class _HomePageState extends State<HomePage> {
                 backgroundColor: Colors.grey,
                 child: Icon(Icons.add),
               ));
+  }
+
+  void _storeConsumption(BuildContext context) async {
+    final Product product = await Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => AddConsumptionPage(_ongoingEvents.first)),
+    );
+
+    Consumption consumption = Consumption(
+      product: product,
+      amount: 1,
+      time: TemporalDateTime.now(),
+    );
+
+    ConsumptionRepository.addConsumption(consumption);
   }
 }
