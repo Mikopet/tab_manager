@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     // TODO: refact this somehow, it causes errors :(
+    // and if we are in debug mode, isAdmin should be true
     Amplify.Auth.getCurrentUser().then((AuthUser user) {
       Amplify.Auth.fetchAuthSession(
               options: CognitoSessionOptions(getAWSCredentials: true))

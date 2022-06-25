@@ -44,6 +44,7 @@ class BackendState extends State<BackendProvider> {
       ]);
     }
 
+    // TODO: use Authless models for debug mode
     Amplify.addPlugin(AmplifyDataStore(modelProvider: ModelProvider.instance));
   }
 
