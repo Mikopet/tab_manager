@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -26,28 +28,30 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    // TODO: refact this somehow, it causes errors :(
-    // and if we are in debug mode, isAdmin should be true
-    Amplify.Auth.getCurrentUser().then((AuthUser user) {
-      Amplify.Auth.fetchAuthSession(
-              options: CognitoSessionOptions(getAWSCredentials: true))
-          .then((AuthSession session) {
-        CognitoAuthSession s = session as CognitoAuthSession;
-        String? token = s.userPoolTokens?.accessToken;
-        List groups = [];
+    if (widget.title.contains("Debug")) {
+      _isAdmin = true;
+    } else {
+      Amplify.Auth.getCurrentUser().then((AuthUser user) {
+        Amplify.Auth.fetchAuthSession(
+                options: CognitoSessionOptions(getAWSCredentials: true))
+            .then((AuthSession session) {
+          CognitoAuthSession s = session as CognitoAuthSession;
+          String? token = s.userPoolTokens?.accessToken;
+          List groups = [];
 
-        if (token != null) {
-          Map<String, dynamic> payload = JwtDecoder.decode(token);
-          groups.addAll(payload['cognito:groups']);
-        }
+          if (token != null) {
+            Map<String, dynamic> payload = JwtDecoder.decode(token);
+            groups.addAll(payload['cognito:groups']);
+          }
 
-        if (groups.contains("Admin")) {
-          setState(() {
-            _isAdmin = true;
-          });
-        }
+          if (groups.contains("Admin")) {
+            setState(() {
+              _isAdmin = true;
+            });
+          }
+        });
       });
-    });
+    }
   }
 
   List<Event> _ongoingEvents = [];

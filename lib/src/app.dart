@@ -5,9 +5,9 @@ import 'package:tab_manager/src/pages/home_page.dart';
 import 'package:tab_manager/src/components/theme.dart';
 
 class TabManager extends StatefulWidget {
-  const TabManager({Key? key, required this.auth}) : super(key: key);
+  const TabManager({Key? key, required this.authenticator}) : super(key: key);
 
-  final bool auth;
+  final bool authenticator;
 
   @override
   State<StatefulWidget> createState() => AppState();
@@ -16,24 +16,24 @@ class TabManager extends StatefulWidget {
 class AppState extends State<TabManager> {
   @override
   Widget build(BuildContext context) {
-    if (!widget.auth) {
-      return MaterialApp(
-        title: 'TabManager',
-        theme: appTheme,
-        home: const HomePage(
-          key: Key('HomePage'),
-          title: 'TabManager Test',
+    if (widget.authenticator) {
+      return Authenticator(
+        key: const Key('Authenticator'),
+        child: MaterialApp(
+          builder: Authenticator.builder(),
+          title: 'TabManager',
+          theme: appTheme,
+          home: const HomePage(key: Key('HomePage'), title: 'TabManager'),
         ),
       );
     }
 
-    return Authenticator(
-      key: const Key('Authenticator'),
-      child: MaterialApp(
-        builder: Authenticator.builder(),
-        title: 'TabManager',
-        theme: appTheme,
-        home: const HomePage(key: Key('HomePage'), title: 'TabManager'),
+    return MaterialApp(
+      title: 'TabManager',
+      theme: appTheme,
+      home: const HomePage(
+        key: Key('HomePage'),
+        title: 'TabManager Debug',
       ),
     );
   }

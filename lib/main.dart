@@ -8,7 +8,7 @@ void main() {
   runApp(
     Phoenix(
       child: const BackendProvider(
-        child: TabManager(auth: false),
+        child: TabManager(authenticator: false),
       ),
     ),
   );

@@ -50,6 +50,7 @@ class _BackendPageState extends State<BackendPage> {
               style: TextStyle(color: Colors.white),
             ),
             ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(primary: Colors.blueGrey),
               onPressed: () {
                 widget.refresh('{}');
               },
@@ -84,9 +85,10 @@ class _BackendPageState extends State<BackendPage> {
     }
 
     if (decodeSucceeded) {
-    AmplifyConfigurationStorage()
-        .writeConfig(decodedData)
-        .whenComplete(() => Phoenix.rebirth(context));
+      // TODO: In case of Debug Mode play session, clear local datastore before add backend
+      AmplifyConfigurationStorage()
+          .writeConfig(decodedData)
+          .whenComplete(() => Phoenix.rebirth(context));
     }
   }
 }

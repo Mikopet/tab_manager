@@ -44,7 +44,6 @@ class BackendState extends State<BackendProvider> {
       ]);
     }
 
-    // TODO: use Authless models for debug mode
     Amplify.addPlugin(AmplifyDataStore(modelProvider: ModelProvider.instance));
   }
 
@@ -87,7 +86,7 @@ class BackendState extends State<BackendProvider> {
     if (Amplify.isConfigured) {
       if (_amplifyConfig != '{}') {
         // TODO: this is not dynamic, need some refactor
-        return const TabManager(auth: true);
+        return const TabManager(authenticator: true);
       }
 
       return widget.child;
