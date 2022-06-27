@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
+import 'package:tab_manager/src/pages/code_scan_page.dart';
 import 'package:tab_manager/src/pages/qr_scan_page.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 
@@ -30,13 +31,34 @@ class _BackendPageState extends State<BackendPage> {
             ),
             ElevatedButton.icon(
               onPressed: () {
-                _storeConfiguration(context);
+                _storeConfiguration(context, method: 'qr');
               },
               icon: const Icon(
                 Icons.qr_code_rounded,
                 size: 24.0,
               ),
               label: const Text('Scan for configuration'),
+            ),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                ' - OR - ',
+                style: TextStyle(color: Colors.white70),
+              ),
+            ),
+            const Text(
+              'in case of trouble provide the connection string',
+              style: TextStyle(color: Colors.white),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                _storeConfiguration(context, method: 'type');
+              },
+              icon: const Icon(
+                Icons.merge_type,
+                size: 24.0,
+              ),
+              label: const Text('Add code'),
             ),
             const Padding(
               padding: EdgeInsets.all(20),
@@ -66,13 +88,20 @@ class _BackendPageState extends State<BackendPage> {
     );
   }
 
-  void _storeConfiguration(BuildContext context) async {
-    final String qrData = await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const QRScanPage(key: Key('QRScanPage')),
-    ));
+  void _storeConfiguration(BuildContext context, {required String method}) async {
+    late String readData;
+    if (method == 'qr') {
+      readData = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const QRScanPage(key: Key('QRScanPage')),
+      ));
+    } else {
+      readData = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const CodeScanPage(key: Key('CodeScanPage')),
+      ));
+    }
 
     final decodedData = utf8.decode(
-      GZipCodec().decode(base64.decode(qrData)),
+      GZipCodec().decode(base64.decode(readData)),
       allowMalformed: true,
     );
 
