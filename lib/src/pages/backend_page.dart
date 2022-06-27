@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 
@@ -67,9 +70,23 @@ class _BackendPageState extends State<BackendPage> {
       builder: (context) => const QRScanPage(key: Key('QRScanPage')),
     ));
 
-    // TODO: validation
+    final decodedData = utf8.decode(
+      GZipCodec().decode(base64.decode(qrData)),
+      allowMalformed: true,
+    );
+
+    var decodeSucceeded = false;
+    try {
+      json.decode(decodedData) as Map<String, dynamic>;
+      decodeSucceeded = true;
+    } on FormatException catch (e) {
+      print('The provided string is not valid JSON');
+    }
+
+    if (decodeSucceeded) {
     AmplifyConfigurationStorage()
-        .writeConfig(qrData)
+        .writeConfig(decodedData)
         .whenComplete(() => Phoenix.rebirth(context));
+    }
   }
 }
