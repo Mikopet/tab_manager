@@ -12,6 +12,8 @@ Future<void> main() async {
   print("COMPRESSED Length: ${compressed.length}");
   final encoded = base64.encode(compressed);
   print("ENCODED Length: ${encoded.length}");
+  print("================= CONNECTION STRING:");
+  print(encoded);
 
   void buildBarcode(
     Barcode bc,
@@ -36,4 +38,6 @@ Future<void> main() async {
     Barcode.qrCode(),
     encoded,
   );
+
+  print("================= QR CODE saved to: ` qr-code.svg ` ");
 }

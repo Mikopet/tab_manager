@@ -25,17 +25,26 @@ data with the official app, or you can simply just compile your own client too.
 ### Build your own backend
 Due to Amplify's stupid behaviour, the following steps are required to install your own backend:
 
- - Go to the `Amplify Studio` in the `AWS Console`
- - Create new app, name it `TabManager`
-[comment]: <> ( - Delete amplify dir: `rm -rf amplify`)
- - Pull the new empty backend: `amplify pull --appID <appid by the studio> --envName <env name by the studio>`
- - It will ask a few things, default is usually good. (important is that you want to modify the backend)
- - Add API: `amplify add api`, `GraphQL`, use `TabManager` for the name, and conflict detection should be enabled (`Auto Merge`)
- - It will ask about schema, choose `Blank Schema`
- - It will ask that you wanna edit the schema, do so: copy the contents of the [Schema](#schema) section
- - `amplify add auth`, default config is okay, `Email` is okay, no advanced settings
-[comment]: <> ( - `git checkout amplify/`)
- - `amplify push`
+ - Go to the `Amplify` in the `AWS Console`
+   * Create new app, name it, launch `Studio`
+ - Go to your `Terminal` and pull the new empty backend:
+   * run `amplify pull --appID <appid by the studio> --envName <env name by the studio>`
+   * it will ask a few things, default is usually good
+   * (important is that you want to modify the backend)
+ - Add API plugin:
+   * run `amplify add api`
+   * choose `GraphQL`
+   * conflict detection should be enabled and set to `Auto Merge`
+   * it will ask about schema, choose `Blank Schema`
+   * it will ask that you wanna edit the schema, do so
+   * copy the contents of the [Schema](#schema) section
+ - Add the authentication plugin:
+   * run `amplify add auth`
+   * default config is okay
+   * `Email` is okay
+   * no advanced settings
+ - Create the backend:
+   * run`amplify push`
 
 ### Schema
 
@@ -78,9 +87,12 @@ type Consumption @model
 ```
 
 ### Create backend connectors
-After your `lib/amplifyconfiguration.dart` is updated with your backend's credentials, you have to run:
+After [backend setup](#Build your own backend) go to the terminal, and check if your
+`lib/amplifyconfiguration.dart` is up to date with your backend's credentials. If not, then run:
+`amplify pull`, and now you can run:
 
 ```bash
+flutter pub get
 flutter pub run lib/commands/create_qr_backend.dart
 ```
 
@@ -90,6 +102,7 @@ It will create a QR code and a connection string. Test both if they are working 
 Currently not so much, but do not forget to generate the icons, if you have modifications :)
 
 ```bash
+flutter pub get
 flutter pub run flutter_launcher_icons:main
 flutter build
 ```
