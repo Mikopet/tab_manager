@@ -109,3 +109,6 @@ flutter build
 
 If you overwrite the `lib/amplifyconfiguration.dart` with your own generated one,
 the backend QR screen will be skipped.
+
+## Known bugs
+With the local data / backend config deletion and logout process the states are mixed up.

@@ -1,9 +1,10 @@
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:tab_manager/src/app.dart';
 
+import 'package:tab_manager/src/app.dart';
 import 'package:tab_manager/src/pages/backend_page.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 import 'package:tab_manager/models/ModelProvider.dart';
@@ -40,7 +41,7 @@ class BackendState extends State<BackendProvider> {
     if (amplifyConfig != '{}') {
       Amplify.addPlugins([
         AmplifyAuthCognito(),
-        // AmplifyAPI(),
+        AmplifyAPI(modelProvider: ModelProvider.instance),
       ]);
     }
 

@@ -25,8 +25,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Generate icons
-        run: flutter pub run flutter_launcher_icons:main
+#      - name: Generate icons
+#        run: flutter pub run flutter_launcher_icons:main
 
 #       - name: Run unit tests
 #         run: flutter test
