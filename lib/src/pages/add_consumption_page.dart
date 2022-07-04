@@ -7,7 +7,9 @@ import 'package:tab_manager/models/Stock.dart';
 import 'package:tab_manager/repositories/product_repository.dart';
 
 class AddConsumptionPage extends StatefulWidget {
-  const AddConsumptionPage(Event event, {Key? key}) : super(key: key);
+  const AddConsumptionPage({Key? key, required this.event}) : super(key: key);
+
+  final Event event;
 
   @override
   State<AddConsumptionPage> createState() => _AddConsumptionPageState();
@@ -16,7 +18,13 @@ class AddConsumptionPage extends StatefulWidget {
 class _AddConsumptionPageState extends State<AddConsumptionPage> {
   List<Product> _products = [];
   bool isSynced = false;
-  Stream<QuerySnapshot<Product>> stream = ProductRepository.getProductsStream();
+  late Stream<QuerySnapshot<Product>> stream;
+
+  @override
+  void initState() {
+    super.initState();
+    stream = ProductRepository.getProductsStreamByEvent(widget.event);
+  }
 
   @override
   Widget build(BuildContext context) {

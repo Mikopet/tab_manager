@@ -18,4 +18,12 @@ class ConsumptionRepository {
       sortBy: [Consumption.TIME.descending()],
     );
   }
+
+  static Stream<QuerySnapshot<Consumption>> getOwnConsumptionsStream(String ownerId) {
+    return Amplify.DataStore.observeQuery(
+      Consumption.classType,
+      where: Consumption.OWNER.eq(ownerId),
+      sortBy: [Consumption.TIME.descending()],
+    );
+  }
 }

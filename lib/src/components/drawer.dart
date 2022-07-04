@@ -7,9 +7,14 @@ import 'package:tab_manager/src/pages/consumption_page.dart';
 import 'package:tab_manager/src/pages/settings_page.dart';
 
 class NavDrawer extends StatelessWidget {
-  const NavDrawer({Key? key, this.admin=false}) : super(key: key);
+  const NavDrawer({
+    Key? key,
+    this.admin = false,
+    required this.userId,
+  }) : super(key: key);
 
   final bool admin;
+  final String userId;
 
   void _navigateTo(c, page) {
     Navigator.of(c).push(MaterialPageRoute(builder: (c) => page));
@@ -42,7 +47,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.input_rounded),
             title: const Text('Consumption'),
-            onTap: () => _navigateTo(context, const ConsumptionPage()),
+            onTap: () => _navigateTo(context, ConsumptionPage(ownerId: userId)),
           ),
           // ListTile(
           //   leading: const Icon(Icons.book_rounded),

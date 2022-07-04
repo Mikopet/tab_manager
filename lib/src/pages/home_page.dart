@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
-        endDrawer: NavDrawer(admin: _isAdmin),
+        endDrawer: NavDrawer(admin: _isAdmin, userId: _userId),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
