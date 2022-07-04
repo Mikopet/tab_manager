@@ -50,7 +50,7 @@ Due to Amplify's stupid behaviour, the following steps are required to install y
 
 ```graphql
 type Stock @model
-  @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admin"], operations: [read, create, update, delete]}]) {
+  @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
   id: ID! @primaryKey
   amount: Int!
   supply_price: Int
@@ -59,7 +59,7 @@ type Stock @model
 }
 
 type Product @model
-  @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
+  @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
   id: ID! @primaryKey
   name: String!
   unit_price: Int!
@@ -69,7 +69,7 @@ type Product @model
 }
 
 type Event @model
-  @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
+  @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}]) {
   id: ID! @primaryKey
   name: String!
   start_date: AWSDate!
@@ -78,11 +78,12 @@ type Event @model
 }
 
 type Consumption @model
-  @auth(rules: [{allow: public, operations: [read]}, {allow: owner}, {allow: groups, groups: ["Admin"]}]) {
+  @auth(rules: [{allow: private, operations: [read]}, {allow: groups, groups: ["Admin"]}, {allow: owner}]) {
   id: ID! @primaryKey
   product: Product! @belongsTo
   amount: Int!
   time: AWSDateTime!
+#  owner: String!
 }
 ```
 

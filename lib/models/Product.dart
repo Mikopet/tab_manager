@@ -202,7 +202,7 @@ class Product extends Model {
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
+        authStrategy: AuthStrategy.PRIVATE,
         operations: [
           ModelOperation.READ
         ]),

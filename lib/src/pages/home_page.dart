@@ -23,6 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isAdmin = false;
+  String _userId = '';
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
 
     if (widget.title.contains("Debug")) {
       _isAdmin = true;
+      _userId = 'debugAdmin';
     } else {
       Amplify.Auth.getCurrentUser().then((AuthUser user) {
         Amplify.Auth.fetchAuthSession(
@@ -50,6 +52,7 @@ class _HomePageState extends State<HomePage> {
             });
           }
         });
+        _userId = user.userId;
       });
     }
   }
@@ -116,6 +119,7 @@ class _HomePageState extends State<HomePage> {
     );
 
     Consumption consumption = Consumption(
+      owner: _userId,
       product: product,
       amount: 1,
       time: TemporalDateTime.now(),

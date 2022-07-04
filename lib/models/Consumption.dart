@@ -32,6 +32,7 @@ class Consumption extends Model {
   final Product? _product;
   final int? _amount;
   final TemporalDateTime? _time;
+  final String? _owner;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -82,6 +83,19 @@ class Consumption extends Model {
     }
   }
   
+  String get owner {
+    try {
+      return _owner!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -90,14 +104,15 @@ class Consumption extends Model {
     return _updatedAt;
   }
   
-  const Consumption._internal({required this.id, required product, required amount, required time, createdAt, updatedAt}): _product = product, _amount = amount, _time = time, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Consumption._internal({required this.id, required product, required amount, required time, required owner, createdAt, updatedAt}): _product = product, _amount = amount, _time = time, _owner = owner, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Consumption({String? id, required Product product, required int amount, required TemporalDateTime time}) {
+  factory Consumption({String? id, required Product product, required int amount, required TemporalDateTime time, required String owner}) {
     return Consumption._internal(
       id: id == null ? UUID.getUUID() : id,
       product: product,
       amount: amount,
-      time: time);
+      time: time,
+      owner: owner);
   }
   
   bool equals(Object other) {
@@ -111,7 +126,8 @@ class Consumption extends Model {
       id == other.id &&
       _product == other._product &&
       _amount == other._amount &&
-      _time == other._time;
+      _time == other._time &&
+      _owner == other._owner;
   }
   
   @override
@@ -126,6 +142,7 @@ class Consumption extends Model {
     buffer.write("product=" + (_product != null ? _product!.toString() : "null") + ", ");
     buffer.write("amount=" + (_amount != null ? _amount!.toString() : "null") + ", ");
     buffer.write("time=" + (_time != null ? _time!.format() : "null") + ", ");
+    buffer.write("owner=" + "$_owner" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -133,12 +150,13 @@ class Consumption extends Model {
     return buffer.toString();
   }
   
-  Consumption copyWith({String? id, Product? product, int? amount, TemporalDateTime? time}) {
+  Consumption copyWith({String? id, Product? product, int? amount, TemporalDateTime? time, String? owner}) {
     return Consumption._internal(
       id: id ?? this.id,
       product: product ?? this.product,
       amount: amount ?? this.amount,
-      time: time ?? this.time);
+      time: time ?? this.time,
+      owner: owner ?? this.owner);
   }
   
   Consumption.fromJson(Map<String, dynamic> json)  
@@ -148,11 +166,12 @@ class Consumption extends Model {
         : null,
       _amount = (json['amount'] as num?)?.toInt(),
       _time = json['time'] != null ? TemporalDateTime.fromString(json['time']) : null,
+      _owner = json['owner'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'product': _product?.toJson(), 'amount': _amount, 'time': _time?.format(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'product': _product?.toJson(), 'amount': _amount, 'time': _time?.format(), 'owner': _owner, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "consumption.id");
@@ -161,13 +180,14 @@ class Consumption extends Model {
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Product).toString()));
   static final QueryField AMOUNT = QueryField(fieldName: "amount");
   static final QueryField TIME = QueryField(fieldName: "time");
+  static final QueryField OWNER = QueryField(fieldName: "owner");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Consumption";
     modelSchemaDefinition.pluralName = "Consumptions";
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
+        authStrategy: AuthStrategy.PRIVATE,
         operations: [
           ModelOperation.READ
         ]),
@@ -214,6 +234,12 @@ class Consumption extends Model {
       key: Consumption.TIME,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Consumption.OWNER,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

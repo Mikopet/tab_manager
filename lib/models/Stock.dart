@@ -169,7 +169,7 @@ class Stock extends Model {
     
     modelSchemaDefinition.authRules = [
       AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
+        authStrategy: AuthStrategy.PRIVATE,
         operations: [
           ModelOperation.READ
         ]),
@@ -179,10 +179,10 @@ class Stock extends Model {
         groups: [ "Admin" ],
         provider: AuthRuleProvider.USERPOOLS,
         operations: [
-          ModelOperation.READ,
           ModelOperation.CREATE,
           ModelOperation.UPDATE,
-          ModelOperation.DELETE
+          ModelOperation.DELETE,
+          ModelOperation.READ
         ])
     ];
     

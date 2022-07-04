@@ -32,7 +32,7 @@ export 'Stock.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "9f2d54ac5b34b7ed6a47828cff9d07bc";
+  String version = "1044e6a271ab3720c3ae56cad5e7890d";
   @override
   List<ModelSchema> modelSchemas = [Consumption.schema, Event.schema, Product.schema, Stock.schema];
   static final ModelProvider _instance = ModelProvider();
