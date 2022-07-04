@@ -39,11 +39,13 @@ class NavDrawer extends StatelessWidget {
                     fit: BoxFit.fill,
                     image: AssetImage('assets/images/cover.webp'))),
           ),
-          !admin ? Container() : ListTile(
-            leading: const Icon(Icons.edit_note_rounded),
-            title: const Text('Admin'),
-            onTap: () => _navigateTo(context, const AdminPage()),
-          ),
+          !admin
+              ? Container()
+              : ListTile(
+                  leading: const Icon(Icons.edit_note_rounded),
+                  title: const Text('Admin'),
+                  onTap: () => _navigateTo(context, const AdminPage()),
+                ),
           ListTile(
             leading: const Icon(Icons.input_rounded),
             title: const Text('Consumption'),

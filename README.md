@@ -30,21 +30,28 @@ Due to Amplify's stupid behaviour, the following steps are required to install y
  - Go to your `Terminal` and pull the new empty backend:
    * run `amplify pull --appID <appid by the studio> --envName <env name by the studio>`
    * it will ask a few things, default is usually good
-   * (important is that you want to modify the backend)
- - Add API plugin:
-   * run `amplify add api`
-   * choose `GraphQL`
-   * conflict detection should be enabled and set to `Auto Merge`
-   * it will ask about schema, choose `Blank Schema`
-   * it will ask that you wanna edit the schema, do so
-   * copy the contents of the [Schema](#schema) section
- - Add the authentication plugin:
+   * important is that you want to modify the backend, so press `Y` there
+- Add the authentication plugin:
    * run `amplify add auth`
    * default config is okay
    * `Email` is okay
    * no advanced settings
+ - Add API plugin:
+   * run `amplify add api`
+   * choose `GraphQL`
+   * authorization should be set to `Cognito`
+   * it will ask for additional types, press `No`
+   * conflict detection should be enabled and set to `Auto Merge`
+   * press `Continue`
+   * it will ask about schema, choose `Blank Schema`
+   * it will ask that you wanna edit the schema, do so
+   * copy the contents of the [Schema](#schema) section and save it
  - Create the backend:
    * run`amplify push`
+   * it will ask for a description, write `default`
+   * it will ask for API key expire, set it to `365`
+
+Of course you can select different options, but this is the tested way.
 
 ### Schema
 

@@ -54,7 +54,6 @@ class BackendState extends State<BackendProvider> {
         _setupAmplify(amplifyConfig);
         await Amplify.configure(amplifyConfig).whenComplete(() {
           setState(() {
-            // _amplifyConfig = amplifyConfig;
             _subscribeAmplify();
           });
         });

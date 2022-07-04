@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class _QRScanPageState extends State<QRScanPage> {
           try {
             await controller?.toggleFlash();
           } on CameraException {
-            log('no flash here');
+            print('no flash here');
           }
           setState(() {});
         },
@@ -103,7 +102,6 @@ class _QRScanPageState extends State<QRScanPage> {
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('no Permission')),

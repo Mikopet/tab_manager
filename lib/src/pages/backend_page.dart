@@ -88,7 +88,8 @@ class _BackendPageState extends State<BackendPage> {
     );
   }
 
-  void _storeConfiguration(BuildContext context, {required String method}) async {
+  void _storeConfiguration(BuildContext context,
+      {required String method}) async {
     late String readData;
     if (method == 'qr') {
       readData = await Navigator.of(context).push(MaterialPageRoute(

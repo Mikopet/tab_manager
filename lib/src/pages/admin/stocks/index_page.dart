@@ -48,7 +48,7 @@ class _StockIndexPageState extends State<StockIndexPage> {
       itemBuilder: (context, index) {
         Stock stock = _stocks[index];
 
-        // TODO: add warn symbols if no time and prive is given
+        // TODO: add warn symbols if no time and price is given
         return ListTile(
           title: Text("${stock.amount} ${stock.product.name}"),
           subtitle: Text(stock.product.event.name),

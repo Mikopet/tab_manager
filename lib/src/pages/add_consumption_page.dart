@@ -54,7 +54,7 @@ class _AddConsumptionPageState extends State<AddConsumptionPage> {
             stocks.isEmpty ? 0 : stocks.fold(0, (p, c) => p + c.amount);
 
         return ListTile(
-          title: Text('${product.name} - ${product.unit_price} curr'),
+          title: Text('${product.name} - ${product.unit_price} coin'),
           // TODO: add currency
           // maybe for the event we can add
           subtitle: Text("$stockSum in stock ${String.fromCharCode(0x00B7)}"),

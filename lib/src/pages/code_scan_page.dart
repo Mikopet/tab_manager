@@ -24,22 +24,22 @@ class _CodeScanPageState extends State<CodeScanPage> {
   }
 
   Widget addWidget() => Container(
-    padding: const EdgeInsets.all(8.0),
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            controller: _codeController,
-            decoration: const InputDecoration(
-              filled: true,
-              labelText: 'Backend code',
-              icon: Icon(Icons.batch_prediction),
-            ),
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                controller: _codeController,
+                decoration: const InputDecoration(
+                  filled: true,
+                  labelText: 'Backend code',
+                  icon: Icon(Icons.batch_prediction),
+                ),
+              ),
+              ElevatedButton(onPressed: _save, child: const Text('Save'))
+            ],
           ),
-          ElevatedButton(onPressed: _save, child: const Text('Save'))
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 }

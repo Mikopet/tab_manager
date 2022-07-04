@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -81,7 +79,7 @@ class _StockAddPageState extends State<StockAddPage> {
           value: p,
           child: ListTile(
             title: Text(p.name),
-            subtitle: Text("${p.event.name}"),
+            subtitle: Text(p.event.name),
           ),
         );
       }).toList(),

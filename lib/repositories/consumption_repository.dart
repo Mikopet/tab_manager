@@ -1,4 +1,3 @@
-import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
 import 'package:tab_manager/models/Consumption.dart';
@@ -19,7 +18,8 @@ class ConsumptionRepository {
     );
   }
 
-  static Stream<QuerySnapshot<Consumption>> getOwnConsumptionsStream(String ownerId) {
+  static Stream<QuerySnapshot<Consumption>> getOwnConsumptionsStream(
+      String ownerId) {
     return Amplify.DataStore.observeQuery(
       Consumption.classType,
       where: Consumption.OWNER.eq(ownerId),
