@@ -1,0 +1,42 @@
+name: "Flutter iOS build"
+
+on:
+  push:
+    branches:
+      - main
+      - cicd-testing
+    tags:
+      - '*'
+    paths-ignore:
+      - '*.md'
+      - '**/*.md'
+
+jobs:
+  build_ios:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        device:
+          - "iPhone 11 Pro Max"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: "List all simulators"
+        run: xcrun xctrace list devices
+
+      - name: "Start Simulator"
+        run: xcrun simctl boot "${{ matrix.device }}"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.10.5'
+          channel: 'stable'
+
+      - name: "Get dependencies"
+        run: flutter pub get
+
+      - name: "Run build - (${{ matrix.device }})"
+        run: flutter build ipa --release
