@@ -59,7 +59,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.settings_rounded),
             title: const Text('Settings'),
-            onTap: () => _navigateTo(context, const SettingsPage()),
+            onTap: () => _navigateTo(context, SettingsPage(userId: userId)),
           ),
           ListTile(
             leading: const Icon(Icons.exit_to_app_rounded),

@@ -4,7 +4,9 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:tab_manager/src/components/amplify_configuration_storage.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({Key? key, required this.userId}) : super(key: key);
+
+  final String userId;
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -47,6 +49,12 @@ class _SettingsPageState extends State<SettingsPage> {
               style: ElevatedButton.styleFrom(primary: Colors.orange),
             ),
           ),
+          Center(
+            child: Column(children: <Widget>[
+              const Text('USER ID:'),
+              Text(widget.userId),
+            ]),
+          )
         ],
       ),
     );

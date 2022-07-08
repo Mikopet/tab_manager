@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:tab_manager/src/pages/admin/consumptions/index_page.dart';
 import 'package:tab_manager/src/pages/admin/events/index_page.dart';
 import 'package:tab_manager/src/pages/admin/products/index_page.dart';
 import 'package:tab_manager/src/pages/admin/stocks/index_page.dart';
@@ -38,6 +39,12 @@ class _AdminPageState extends State<AdminPage> {
             child: ElevatedButton(
               onPressed: () => _navigateTo(context, const StockIndexPage()),
               child: const Text('Stocks'),
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              onPressed: () => _navigateTo(context, const ConsumptionIndexPage()),
+              child: const Text('Consumptions'),
             ),
           ),
         ],
