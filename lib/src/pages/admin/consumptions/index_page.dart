@@ -18,12 +18,36 @@ class _ConsumptionIndexPageState extends State<ConsumptionIndexPage> {
   bool isSynced = false;
   Stream<QuerySnapshot<Consumption>> stream =
       ConsumptionRepository.getConsumptionsStream();
+  String searchString = "";
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Consumptions')),
-      body: indexWidget(),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  searchString = value.toLowerCase();
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: 'Search',
+                suffixIcon: Icon(Icons.search),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(child: indexWidget()),
+        ],
+      ),
     );
   }
 
@@ -47,16 +71,18 @@ class _ConsumptionIndexPageState extends State<ConsumptionIndexPage> {
         int? consumptionSum = consumptionsByUsers[userId]
             ?.fold(0, (p, c) => p! + c.product.unit_price);
 
-        return ListTile(
-          title: Text(userId),
-          subtitle: Text("$consumptionSum coin"),
-          leading: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
-              Center(child: Icon(Icons.monetization_on)),
-            ],
-          ),
-        );
+        return userId.contains(searchString)
+            ? ListTile(
+                title: Text(userId),
+                subtitle: Text("$consumptionSum coin"),
+                leading: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const <Widget>[
+                    Center(child: Icon(Icons.monetization_on)),
+                  ],
+                ),
+              )
+            : Container();
       },
     );
   }
