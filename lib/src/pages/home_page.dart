@@ -26,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
+    // TODO: refact this to the app.dart
     if (widget.title.contains("Debug")) {
       _isAdmin = true;
       _userId = 'debugAdmin';
@@ -50,21 +51,36 @@ class _HomePageState extends State<HomePage> {
           }
         });
         _userId = user.userId;
+        setState(() {
+          ownConsumptionStream =
+              ConsumptionRepository.getOwnConsumptionsStream(_userId);
+        });
       });
     }
   }
 
   List<Event> _ongoingEvents = [];
-  bool isSynced = false;
+  bool eventsSynced = false;
   Stream<QuerySnapshot<Event>> ongoingEventStream =
       EventRepository.getOngoingEventsStream();
+
+  List<Consumption> _consumptions = [];
+  bool consumptionsSynced = false;
+  late Stream<QuerySnapshot<Consumption>> ownConsumptionStream;
 
   @override
   Widget build(BuildContext context) {
     ongoingEventStream.listen((QuerySnapshot<Event> snapshot) {
       setState(() {
         _ongoingEvents = snapshot.items;
-        isSynced = snapshot.isSynced;
+        eventsSynced = snapshot.isSynced;
+      });
+    });
+
+    ownConsumptionStream.listen((QuerySnapshot<Consumption> snapshot) {
+      setState(() {
+        _consumptions = snapshot.items;
+        consumptionsSynced = snapshot.isSynced;
       });
     });
 
@@ -82,7 +98,12 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  'X',
+                  _consumptions
+                      .fold(
+                        0,
+                        (int p, Consumption c) => p + c.product.unit_price,
+                      )
+                      .toString(),
                   style: Theme.of(context).textTheme.headline1,
                 ),
               ),

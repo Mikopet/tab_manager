@@ -50,6 +50,7 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
         return ListTile(
           title: Text(
               '${consumption.product.name} - ${consumption.amount} pieces (${consumption.product.event.name})'),
+          // TODO: add timezone to event
           subtitle: Text(consumption.time.toString()),
           leading: Row(
             mainAxisSize: MainAxisSize.min,
