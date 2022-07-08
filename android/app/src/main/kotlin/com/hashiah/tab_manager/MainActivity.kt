@@ -1,4 +1,4 @@
-package dev.mikopet.tab_manager
+package com.hashiah.tab_manager
 
 import io.flutter.embedding.android.FlutterActivity
 
