@@ -1,5 +1,6 @@
-import 'package:amplify_datastore/amplify_datastore.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:tab_manager/models/Consumption.dart';
 
 import 'package:tab_manager/models/Event.dart';
 import 'package:tab_manager/models/Product.dart';
@@ -7,9 +8,14 @@ import 'package:tab_manager/models/Stock.dart';
 import 'package:tab_manager/repositories/product_repository.dart';
 
 class AddConsumptionPage extends StatefulWidget {
-  const AddConsumptionPage({Key? key, required this.event}) : super(key: key);
+  const AddConsumptionPage({
+    Key? key,
+    required this.event,
+    required this.undo,
+  }) : super(key: key);
 
   final Event event;
+  final VoidCallback undo;
 
   @override
   State<AddConsumptionPage> createState() => _AddConsumptionPageState();
@@ -65,6 +71,17 @@ class _AddConsumptionPageState extends State<AddConsumptionPage> {
             ],
           ),
           onTap: () {
+            final snackBar = SnackBar(
+              content: Text('Yay! 1 ${product.name} added!'),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {
+                  widget.undo();
+                },
+              ),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
             // TODO: a half-second wait mechanism to aggregate user action
             Navigator.pop(context, product);
           },

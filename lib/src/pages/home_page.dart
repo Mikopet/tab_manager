@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isAdmin = false;
   String _userId = '';
+  late Consumption _lastConsumption;
 
   @override
   void initState() {
@@ -134,17 +135,24 @@ class _HomePageState extends State<HomePage> {
     // TODO: handle return without pressing on product
     final Product product = await Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) =>
-              AddConsumptionPage(event: _ongoingEvents.first)),
+        builder: (context) => AddConsumptionPage(
+          event: _ongoingEvents.first,
+          undo: _undoConsumption,
+        ),
+      ),
     );
 
-    Consumption consumption = Consumption(
+    _lastConsumption = Consumption(
       owner: _userId,
       product: product,
       amount: 1,
       time: TemporalDateTime.now(),
     );
 
-    ConsumptionRepository.addConsumption(consumption);
+    ConsumptionRepository.addConsumption(_lastConsumption);
+  }
+
+  void _undoConsumption() async {
+    Amplify.DataStore.delete(_lastConsumption);
   }
 }
