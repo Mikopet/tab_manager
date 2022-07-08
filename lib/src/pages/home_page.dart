@@ -131,6 +131,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _storeConsumption(BuildContext context) async {
+    // TODO: handle return without pressing on product
     final Product product = await Navigator.of(context).push(
       MaterialPageRoute(
           builder: (context) =>

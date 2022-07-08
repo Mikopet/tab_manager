@@ -1,6 +1,5 @@
-import "package:collection/collection.dart";
-
 import 'package:amplify_datastore/amplify_datastore.dart';
+import "package:collection/collection.dart";
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
