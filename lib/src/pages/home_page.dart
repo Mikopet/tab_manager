@@ -1,7 +1,5 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'package:tab_manager/models/ModelProvider.dart';
 import 'package:tab_manager/repositories/consumption_repository.dart';
@@ -10,64 +8,31 @@ import 'package:tab_manager/src/components/drawer.dart';
 import 'package:tab_manager/src/pages/add_consumption_page.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({
+    Key? key,
+    required this.title,
+    required this.admin,
+    required this.userId,
+  }) : super(key: key);
 
   final String title;
+  final String userId;
+  final bool admin;
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _isAdmin = false;
-  String _userId = '';
-  late Consumption _lastConsumption;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // TODO: refact this to the app.dart
-    if (widget.title.contains("Debug")) {
-      _isAdmin = true;
-      _userId = 'debugAdmin';
-    } else {
-      Amplify.Auth.getCurrentUser().then((AuthUser user) {
-        Amplify.Auth.fetchAuthSession(
-                options: CognitoSessionOptions(getAWSCredentials: true))
-            .then((AuthSession session) {
-          CognitoAuthSession s = session as CognitoAuthSession;
-          String? token = s.userPoolTokens?.accessToken;
-          List groups = [];
-
-          if (token != null) {
-            Map<String, dynamic> payload = JwtDecoder.decode(token);
-            groups.addAll(payload['cognito:groups']);
-          }
-
-          if (groups.contains("Admin")) {
-            setState(() {
-              _isAdmin = true;
-            });
-          }
-        });
-        _userId = user.userId;
-        setState(() {
-          ownConsumptionStream =
-              ConsumptionRepository.getOwnConsumptionsStream(_userId);
-        });
-      });
-    }
-  }
+  Consumption? _lastConsumption;
+  int _sumConsumption = -1;
 
   List<Event> _ongoingEvents = [];
   bool eventsSynced = false;
   Stream<QuerySnapshot<Event>> ongoingEventStream =
       EventRepository.getOngoingEventsStream();
 
-  List<Consumption> _consumptions = [];
-  bool consumptionsSynced = false;
-  late Stream<QuerySnapshot<Consumption>> ownConsumptionStream;
+  Stream<QuerySnapshot<Consumption>>? ownConsumptionStream;
 
   @override
   Widget build(BuildContext context) {
@@ -78,16 +43,26 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
-    ownConsumptionStream.listen((QuerySnapshot<Consumption> snapshot) {
+    // TODO: fix this pile of crap
+    ownConsumptionStream ??=
+        ConsumptionRepository.getOwnConsumptionsStream(widget.userId);
+    ownConsumptionStream?.listen((QuerySnapshot<Consumption> snapshot) {
       setState(() {
-        _consumptions = snapshot.items;
-        consumptionsSynced = snapshot.isSynced;
+        try {
+          _sumConsumption = snapshot.items
+              .fold(0, (int p, Consumption c) => p + c.product.unit_price);
+        } on AmplifyCodeGenModelException catch (_) {
+          setState(() {
+            ownConsumptionStream =
+                ConsumptionRepository.getOwnConsumptionsStream(widget.userId);
+          });
+        }
       });
     });
 
     return Scaffold(
         appBar: AppBar(title: Text(widget.title)),
-        endDrawer: NavDrawer(admin: _isAdmin, userId: _userId),
+        endDrawer: NavDrawer(admin: widget.admin, userId: widget.userId),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -99,12 +74,7 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Text(
-                  _consumptions
-                      .fold(
-                        0,
-                        (int p, Consumption c) => p + c.product.unit_price,
-                      )
-                      .toString(),
+                  _sumConsumption.toString(),
                   style: Theme.of(context).textTheme.headline1,
                 ),
               ),
@@ -133,7 +103,7 @@ class _HomePageState extends State<HomePage> {
 
   void _storeConsumption(BuildContext context) async {
     // TODO: handle return without pressing on product
-    final Product product = await Navigator.of(context).push(
+    final Product? product = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => AddConsumptionPage(
           event: _ongoingEvents.first,
@@ -142,17 +112,21 @@ class _HomePageState extends State<HomePage> {
       ),
     );
 
-    _lastConsumption = Consumption(
-      owner: _userId,
-      product: product,
-      amount: 1,
-      time: TemporalDateTime.now(),
-    );
+    if (product != null) {
+      _lastConsumption = Consumption(
+        owner: widget.userId,
+        product: product,
+        amount: 1,
+        time: TemporalDateTime.now(),
+      );
 
-    ConsumptionRepository.addConsumption(_lastConsumption);
+      setState(() {
+        ConsumptionRepository.addConsumption(_lastConsumption!);
+      });
+    }
   }
 
   void _undoConsumption() async {
-    Amplify.DataStore.delete(_lastConsumption);
+    Amplify.DataStore.delete(_lastConsumption!);
   }
 }
