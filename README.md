@@ -1,4 +1,7 @@
 # TabManager
+
+[![Flutter Testing](https://github.com/Mikopet/tab_manager/actions/workflows/flutter.yml/badge.svg)](https://github.com/Mikopet/tab_manager/actions/workflows/flutter.yml)
+
 What is `tab_manager` about?
 
 Well, it's easy, this is a tab manager. Imagine, you have a bigger group at an event, like a camp.
