@@ -26,8 +26,6 @@ class AppState extends State<TabManager> {
 
     if (widget.authenticator) {
       Amplify.Auth.getCurrentUser().then((AuthUser user) {
-        _userId = user.userId;
-
         Amplify.Auth.fetchAuthSession(
           options: CognitoSessionOptions(
             getAWSCredentials: true,
@@ -47,6 +45,7 @@ class AppState extends State<TabManager> {
           if (groups.contains("Admin")) {
             setState(() => _admin = true);
           }
+          setState(() => _userId = user.userId);
         });
       });
     }

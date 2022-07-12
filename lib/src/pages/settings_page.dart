@@ -42,8 +42,8 @@ class _SettingsPageState extends State<SettingsPage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Amplify.Auth.signOut();
-                Phoenix.rebirth(context);
+                Amplify.Auth.signOut()
+                    .whenComplete(() => Phoenix.rebirth(context));
               },
               child: const Text('Sign Out'),
               style: ElevatedButton.styleFrom(primary: Colors.orange),
