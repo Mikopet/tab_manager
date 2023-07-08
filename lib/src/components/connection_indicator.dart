@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:tab_manager/src/app.dart';
+import 'package:tab_manager/src/backend.dart';
 
 class ConnectionIndicator extends StatefulWidget {
   const ConnectionIndicator({Key? key}) : super(key: key);
@@ -16,19 +17,15 @@ class _ConnectionIndicatorState extends State<ConnectionIndicator> {
     const onStyle = TextStyle(color: Colors.green);
 
     return Column(
-      children: const [
-        // TODO: make it work
-        Text('ALPHA', style: TextStyle(color: Colors.red)),
-        /*
+      children: [
         Text(
-          AppState.networkStatus ? 'Online' : 'Offline',
-          style: AppState.networkStatus ? onStyle : offStyle,
+          BackendState.networkStatus ? 'Online' : 'Offline',
+          style: BackendState.networkStatus ? onStyle : offStyle,
         ),
         Text(
-          AppState.outboxStatus ? 'Synced' : 'Unynced',
-          style: AppState.outboxStatus ? onStyle : offStyle,
+          BackendState.outboxStatus ? 'Synced' : 'Unsynced',
+          style: BackendState.outboxStatus ? onStyle : offStyle,
         ),
-         */
       ],
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -19,6 +21,7 @@ class BackendProvider extends StatefulWidget {
 }
 
 class BackendState extends State<BackendProvider> {
+  StreamSubscription<HubEvent>? stream;
   static bool networkStatus = false;
   static bool outboxStatus = false;
   String _amplifyConfig = '{}';
@@ -64,18 +67,26 @@ class BackendState extends State<BackendProvider> {
   }
 
   void _subscribeAmplify() {
-    Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
+    stream = Amplify.Hub.listen([HubChannel.DataStore], (hubEvent) {
       if (hubEvent.eventName == 'networkStatus') {
         setState(() {
-          // networkStatus = hubEvent.payload.active
+          final status = hubEvent.payload as NetworkStatusEvent?;
+          networkStatus = status?.active ?? false;
         });
       }
       if (hubEvent.eventName == 'outboxStatus') {
         setState(() {
-          // outboxStatus = hubEvent.payload.isEmpty
+          final status = hubEvent.payload as OutboxStatusEvent?;
+          outboxStatus = status?.isEmpty ?? false;
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    stream?.cancel();
+    super.dispose();
   }
 
   @override
